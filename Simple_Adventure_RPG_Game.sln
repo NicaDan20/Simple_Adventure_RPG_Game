@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adventure_RPG_Game", "Adventure_RPG_Game\Adventure_RPG_Game.csproj", "{0B313586-9B37-4928-8D0B-6D08DD7178CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{FE54A5EA-DCBB-4C8C-A5F8-E1DEF0AD912B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B313586-9B37-4928-8D0B-6D08DD7178CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B313586-9B37-4928-8D0B-6D08DD7178CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B313586-9B37-4928-8D0B-6D08DD7178CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B313586-9B37-4928-8D0B-6D08DD7178CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE54A5EA-DCBB-4C8C-A5F8-E1DEF0AD912B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE54A5EA-DCBB-4C8C-A5F8-E1DEF0AD912B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE54A5EA-DCBB-4C8C-A5F8-E1DEF0AD912B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE54A5EA-DCBB-4C8C-A5F8-E1DEF0AD912B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F53C3B5-BF36-4DC8-9F52-8EDE56A3B184}
+	EndGlobalSection
+EndGlobal
