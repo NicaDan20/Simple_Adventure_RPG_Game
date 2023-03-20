@@ -1,0 +1,116 @@
+[
+  {
+    "Id": 1,
+    "Name": "Rusty Sword",
+    "NamePlural": "Rusty Swords",
+    "Type": "WEAPON",
+    "MinimumDamage": "1",
+    "MaximumDamage": "3"
+  },
+  {
+    "Id": 2,
+    "Name": "Rat Tail",
+    "NamePlural": "Rat Tails",
+    "Type": "MISC"
+  },
+  {
+    "Id": 3,
+    "Name": "Scrap of Fur",
+    "NamePlural": "Scraps of Fur",
+    "Type": "MISC"
+  },
+  {
+    "Id": 4,
+    "Name": "Cobra Fang",
+    "NamePlural": "Cobra Fangs",
+    "Type": "MISC"
+  },
+  {
+    "Id": 5,
+    "Name": "Spider Silk",
+    "NamePlural": "Spider Silks",
+    "Type": "MISC"
+  },
+  {
+    "Id": 6,
+    "Name": "Battle Axe",
+    "NamePlural": "Battle Axes",
+    "Type": "WEAPON",
+    "MinimumDamage": "2",
+    "MaximumDamage": "5"
+  },
+  {
+    "Id": 7,
+    "Name": "Spiked Club",
+    "NamePlural": "Spiked Clubs",
+    "Type": "WEAPON",
+    "MinimumDamage": "3",
+    "MaximumDamage": "4"
+  },
+  {
+    "Id": 9,
+    "Name": "Broad Sword",
+    "NamePlural": "Broad Swords",
+    "Type": "WEAPON",
+    "MinimumDamage": "4",
+    "MaximumDamage": "6"
+  },
+  {
+    "Id": 8,
+    "Name": "Double Axe",
+    "NamePlural": "Double Axes",
+    "Type": "WEAPON",
+    "MinimumDamage": "3",
+    "MaximumDamage": "7"
+  },
+  {
+    "Id": 10,
+    "Name": "Small Healing Potion",
+    "NamePlural": "Small Healing Potions",
+    "Type": "HEALING_POTION",
+    "AmountToHeal": 10
+  },
+  {
+    "Id": 11,
+    "Name": "Adventurer's Pass",
+    "NamePlural": "Adventurer's Passes",
+    "Type": "MISC"
+  },
+  {
+    "Id": 12,
+    "Name": "Bear Paw",
+    "NamePlural": "Bear Paws",
+    "Type": "MISC"
+  },
+  {
+    "Id": 13,
+    "Name": "Medium Healing Potion",
+    "NamePlural": "Medium Healing Potions",
+    "Type": "HEALING_POTION",
+    "AmountToHeal": "20"
+  },
+  {
+    "Id": 14,
+    "Name": "Cobra Venom",
+    "NamePlural": "Cobra Venom",
+    "Type": "MISC"
+  },
+  {
+    "Id": 15,
+    "Name": "Bandit Ear",
+    "NamePlural": "Bandit Ears",
+    "Type": "MISC"
+  },
+  {
+    "Id": 16,
+    "Name": "Bottle of Ale",
+    "NamePlural": "Bottles of Ale",
+    "Type": "MISC"
+  },
+  {
+    "Id": 17,
+    "Name": "Bear Flank",
+    "NamePlural": "Bear Flanks",
+    "Type": "MISC"
+  }
+]

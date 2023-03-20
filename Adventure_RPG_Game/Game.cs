@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Adventure_RPG_Game
 {
@@ -25,6 +26,10 @@ namespace Adventure_RPG_Game
             label_gold.Text = _player.Gold.ToString();
             label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
             label_level.Text = _player.Level.ToString();
+
+            System.Console.WriteLine("Hi");
+            Trace.WriteLine(World.PopulateMonsters());
+            
         }
 
         private void Game_Load(object sender, EventArgs e)

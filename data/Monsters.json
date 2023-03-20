@@ -1,0 +1,117 @@
+[
+  {
+    "ID": 1,
+    "Name": "Rat",
+    "CurrentHitPoints": 10,
+    "MaximumHitPoints": 10,
+    "MinimumDamage": 4,
+    "MaximumDamage": 7,
+    "RewardExperience": 4,
+    "RewardGold": 1,
+    "LootTable": [
+      {
+        "ItemId": 2,
+        "DropChance": 75,
+        "IsDefaultItem": false
+      },
+      {
+        "ItemId": 3,
+        "DropChance": 75,
+        "IsDefaultItem": true
+      }
+    ]
+  },
+  {
+    "ID": 2,
+    "Name": "Cobra",
+    "CurrentHitPoints": 8,
+    "MaximumHitPoints": 8,
+    "MinimumDamage": 7,
+    "MaximumDamage": 10,
+    "RewardExperience": 5,
+    "RewardGold": 1,
+    "LootTable": [
+      {
+        "ItemId": 4,
+        "DropChance": 75,
+        "IsDefaultItem": true
+      },
+      {
+        "ItemId": 14,
+        "DropChance": 75,
+        "IsDefaultItem": false
+      }
+    ]
+  },
+  {
+    "ID": 3,
+    "Name": "Giant Spider",
+    "CurrentHitPoints": 15,
+    "MaximumHitPoints": 15,
+    "MinimumDamage": 6,
+    "MaximumDamage": 8,
+    "RewardExperience": 7,
+    "RewardGold": 2,
+    "LootTable": [
+      {
+        "ItemId": 5,
+        "DropChance": 75,
+        "IsDefaultItem": true
+      }
+    ]
+  },
+  {
+    "ID": 3,
+    "Name": "Bear",
+    "CurrentHitPoints": 20,
+    "MaximumHitPoints": 20,
+    "MinimumDamage": 10,
+    "MaximumDamage": 14,
+    "RewardExperience": 10,
+    "RewardGold": 5,
+    "LootTable": [
+      {
+        "ItemId": 12,
+        "DropChance": 75,
+        "IsDefaultItem": false
+      },
+      {
+        "ItemId": 3,
+        "DropChance": 75,
+        "IsDefaultItem": true
+      },
+      {
+        "ItemId": 17,
+        "DropChance": 25,
+        "IsDefaultItem": false
+      }
+    ]
+  },
+  {
+    "ID": 4,
+    "Name": "Bandit",
+    "CurrentHitPoints": 15,
+    "MaximumHitPoints": 15,
+    "MinimumDamage": 9,
+    "MaximumDamage": 11,
+    "RewardExperience": 8,
+    "RewardGold": 10,
+    "LootTable": [
+      {
+        "ItemId": 9,
+        "DropChance": 15,
+        "IsDefaultItem": false
+      },
+      {
+        "ItemId": 15,
+        "DropChance": 75,
+        "IsDefaultItem": true
+      },
+      {
+        "ItemId": 16,
+        "DropChance": 50,
+        "IsDefaultItem": false
+      }
+    ]
+  }
+]

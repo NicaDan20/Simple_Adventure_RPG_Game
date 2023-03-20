@@ -8,14 +8,26 @@ namespace Engine
 {
     public class LootItem
     {
-        public Item Details { get; set; }
+        public int ItemId { get; set; }
         public int DropChance { get; set; }
-        public bool isDefaultItem { get; set; }
-        public LootItem (Item _details, int _dropChance, bool _isDefaultItem)
+        public bool IsDefaultItem { get; set; }
+        public Item Details { get; set; }
+        public void MapItemToID(int _itemId)
         {
-            Details = _details;
+            foreach (Item item in World.Items)
+            {
+                if (item.ID == _itemId)
+                {
+                    Details = item;
+                    break;
+                }
+            }
+        }
+        public LootItem (int _itemId, int _dropChance, bool _isDefaultItem)
+        {
+            ItemId = _itemId;
             DropChance = _dropChance;
-            isDefaultItem = _isDefaultItem;
+            IsDefaultItem = _isDefaultItem;
         }
     }
 }
