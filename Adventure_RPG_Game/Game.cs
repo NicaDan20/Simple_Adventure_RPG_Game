@@ -20,15 +20,13 @@ namespace Adventure_RPG_Game
             InitializeComponent();
             _player = new Player(20, 20, 0, 0, 1);
 
-            Location location = new Location(1, "Home", "This is your home.");
-
             label_experience.Text = _player.ExperiencePoints.ToString();
             label_gold.Text = _player.Gold.ToString();
             label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
             label_level.Text = _player.Level.ToString();
 
             System.Console.WriteLine("Hi");
-            Trace.WriteLine(World.PopulateMonsters());
+            Trace.WriteLine(World.PopulateLocations());
             
         }
 

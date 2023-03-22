@@ -1,0 +1,44 @@
+[
+  {
+    "ID": 1,
+    "Name": "Clear the Alchemist's Garden",
+    "Description": "The Alchemist requests you to clear his garden of rodents and bring 3 rat tails as proof of the deed. You will receive a healing potion and 10 gold pieces.",
+    "RewardExperience": 20,
+    "RewardGold": 10,
+    "QuestCompletionItems": [
+      {
+        "ItemID": 2,
+        "Quantity": 3
+      }
+    ],
+    "RewardItemID": 10
+  },
+  {
+    "ID": 2,
+    "Name": "Clear the Farmer's Field",
+    "Description": "The old farmer requests you to clear his field of venomous snakes and bring him back 3 Cobra Fangs. You will be rewarded with an adventurer's pass that will allow you to cross the bridge.",
+    "RewardExperience": 35,
+    "RewardGold": 0,
+    "QuestCompletionItems": [
+      {
+        "ItemID": 4,
+        "Quantity": 3
+      }
+    ],
+    "RewardItemID": 11
+  },
+  {
+    "ID": 3,
+    "Name": "Slay the Giant Spider",
+    "Description": "The Giant Spider has terrorized your town for too long. Trade routes with neighbouring cities has been disrupted as a result of the Spider taking over the forest. Bring back a piece of his silk as proof of the deed. You will receive 50 gold and a Broad Sword as reward.",
+    "RewardExperience": 50,
+    "RewardGold": 50,
+    "QuestCompletionItems": [
+      {
+        "ItemID": 5,
+        "Quantity": 1
+      }
+    ],
+    "RewardItemID": 9
+  }
+]

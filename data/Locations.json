@@ -1,0 +1,108 @@
+[
+  {
+    "ID": 1,
+    "Name": "Home",
+    "Description": "Your house. You really need to clean up the place.",
+    "AdjacentLocations": {
+      "WestID": 2
+    }
+  },
+  {
+    "ID": 2,
+    "Name": "Town Square",
+    "Description": "You can hear the buzzing of people trodding about, of merchants bartering with their customers. Despite the apparent activity, there is an air of wrongness about: The fountain is dried, the roads are not maintained, the houses look grey and destitute.",
+    "AdjacentLocations": {
+      "NorthID": 5,
+      "EastID": 1,
+      "SouthID": 3,
+      "WestID": 7
+    }
+  },
+  {
+    "ID": 3,
+    "Name": "Alchemist's Hut",
+    "Description": "There are many strange plants on the shelves, the air is impregnated with a heavy, gaseous scent. You feel dizzy just standing inside, but the apothecary seems to have no trouble breathing.",
+    "QuestAvailableHereID": 1,
+    "AdjacentLocations": {
+      "NorthID": 2,
+      "EastID": 4
+    }
+  },
+  {
+    "ID": 4,
+    "Name": "Alchemist's Garden",
+    "Description": "Many plants are growing here...",
+    "MonsterLivingHereID": 1,
+    "AdjacentLocations": {
+      "WestID": 3
+    }
+  },
+  {
+    "ID": 5,
+    "Name": "Farmhouse",
+    "Description": "There is a small farmhouse, with a farmer standing on the porch. A heavy scent of cow dung permeates the air, but it is not wholly unpleasant. You can hear chickens strutting about.",
+    "QuestAvailableHereID": 1,
+    "AdjacentLocations": {
+      "NorthID": 6,
+      "SouthID": 2
+    }
+  },
+  {
+    "ID": 6,
+    "Name": "Farmer's Field",
+    "Description": "You see rows of vegetables growing here.",
+    "MonsterLivingHereID": 2,
+    "AdjacentLocations": {
+      "SouthID": 5
+    }
+  },
+  {
+    "ID": 7,
+    "Name": "Guard Post",
+    "Description": "There is a large, tough-looking guard here, guarding a bridge.",
+    "QuestAvailableHereID": 3,
+    "AdjacentLocations": {
+      "EastID": 2,
+      "WestID": 8
+    }
+  },
+  {
+    "ID": 8,
+    "Name": "Bridge",
+    "Description": "A stone bridge crossing a wide river",
+    "ItemRequiredToEnterID": 11,
+    "AdjacentLocations": {
+      "EastID": 7,
+      "WestID": 9
+    }
+  },
+  {
+    "ID": 9,
+    "Name": "Forest",
+    "Description": "You see spider webs covering the trees. The forest is dark, the trees completely blocking out the sun.",
+    "MonsterLivingHereID": 5,
+    "AdjacentLocations": {
+      "EastID": 8,
+      "WestID": 11,
+      "NorthID": 10
+    }
+  },
+  {
+    "ID": 10,
+    "Name": "Bandit Camp",
+    "Description": "A few tents, a camp fire and lots and lots of litter can be seen. You never thought bandits would be the hygenic type and your suspicions prove correct, this place really stinks.",
+    "MonsterLivingHereID": 4,
+    "AdjacentLocations": {
+      "SouthID": 9
+    }
+  },
+  {
+    "ID": 11,
+    "Name": "Spider's Cave",
+    "Description": "This place is dark, but you can make out animal bones, bat guano and litter. Spider webs cover the place in it's entirety and you feel uneasy within the confines of this cold, dark place.",
+    "MonsterLivingHereID": 3,
+    "AdjacentLocations": {
+      "EastID": 9
+    }
+  }
+]

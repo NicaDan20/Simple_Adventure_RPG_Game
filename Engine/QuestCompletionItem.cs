@@ -8,11 +8,12 @@ namespace Engine
 {
     public class QuestCompletionItem
     {
+        public int ItemID { get; set; }
         public Item Details { get; set; }
         public int Quantity { get; set; }
-        public QuestCompletionItem(Item _details, int _quantity)
+        public QuestCompletionItem(int _itemId, int _quantity)
         {
-            Details = _details;
+            ItemID = _itemId;
             Quantity = _quantity;
         }
     }

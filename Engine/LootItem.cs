@@ -12,17 +12,6 @@ namespace Engine
         public int DropChance { get; set; }
         public bool IsDefaultItem { get; set; }
         public Item Details { get; set; }
-        public void MapItemToID(int _itemId)
-        {
-            foreach (Item item in World.Items)
-            {
-                if (item.ID == _itemId)
-                {
-                    Details = item;
-                    break;
-                }
-            }
-        }
         public LootItem (int _itemId, int _dropChance, bool _isDefaultItem)
         {
             ItemId = _itemId;
