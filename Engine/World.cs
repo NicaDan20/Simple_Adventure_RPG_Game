@@ -53,7 +53,7 @@ namespace Engine
                     {
                         foreach (LootItem it in m.LootTable)
                         {
-                            it.Details = ObjectMapper.MapItemToID(it.ItemId);
+                            it.Details = ObjectMapper.ReturnItemByID(it.ItemId);
                         }
                         Trace.WriteLine(m.LootTable[0].Details.Name);
                     }
@@ -78,9 +78,9 @@ namespace Engine
                     {
                         foreach (QuestCompletionItem it in q.QuestCompletionItems)
                         {
-                            it.Details = ObjectMapper.MapItemToID(it.ItemID);
+                            it.Details = ObjectMapper.ReturnItemByID(it.ItemID);
                         }
-                        q.RewardItem = ObjectMapper.MapItemToID(q.RewardItemID);
+                        q.RewardItem = ObjectMapper.ReturnItemByID(q.RewardItemID);
                         Trace.WriteLine(q);
                     }
                     return quests;
@@ -102,9 +102,9 @@ namespace Engine
                     var locations = JsonConvert.DeserializeObject<List<Location>>(json);
                     foreach(Location l in locations)
                     {
-                        l.ItemRequiredToEnter = ObjectMapper.MapItemToID(l.ItemRequiredToEnterID);
-                        l.MonsterLivingHere = ObjectMapper.MapMonsterToID(l.MonsterLivingHereID);
-                        l.QuestAvailableHere = ObjectMapper.MapQuestToID(l.QuestAvailableHereID);
+                        l.ItemRequiredToEnter = ObjectMapper.ReturnItemByID(l.ItemRequiredToEnterID);
+                        l.MonsterLivingHere = ObjectMapper.ReturnMonsterByID(l.MonsterLivingHereID);
+                        l.QuestAvailableHere = ObjectMapper.ReturnQuestByID(l.QuestAvailableHereID);
                         l.AdjacentLocations = ObjectMapper.MapLocationsToDirectionID(l.AdjacentLocations, locations);
                     }
                     return locations;

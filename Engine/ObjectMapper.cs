@@ -8,7 +8,7 @@ namespace Engine
 {
     public static class ObjectMapper
     {
-        public static Item MapItemToID(int _itemId)
+        public static Item ReturnItemByID(int _itemId)
         {
             foreach (Item item in World.Items)
             {
@@ -20,7 +20,7 @@ namespace Engine
             return null;
         }
 
-        public static Quest MapQuestToID (int _questId)
+        public static Quest ReturnQuestByID (int _questId)
         {
             foreach (Quest quest in World.Quests)
             {
@@ -32,7 +32,7 @@ namespace Engine
             return null;
         }
 
-        public static Monster MapMonsterToID (int _monsterID)
+        public static Monster ReturnMonsterByID (int _monsterID)
         {
             foreach (Monster monster in World.Monsters)
             {
@@ -67,6 +67,18 @@ namespace Engine
                 }
             }
             return y;
+        }
+
+        public static Location ReturnLocationByID(int id)
+        {
+            foreach(Location location in World.Locations)
+            {
+                if (location.ID == id)
+                {
+                    return location;
+                }
+            }
+            return null;
         }
 
     }

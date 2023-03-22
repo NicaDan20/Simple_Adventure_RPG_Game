@@ -198,6 +198,7 @@ namespace Adventure_RPG_Game
             this.btnGoNorth.TabIndex = 13;
             this.btnGoNorth.Text = "Go North";
             this.btnGoNorth.UseVisualStyleBackColor = true;
+            this.btnGoNorth.Click += new System.EventHandler(this.btnGoNorth_Click);
             // 
             // btnGoEast
             // 
@@ -207,6 +208,7 @@ namespace Adventure_RPG_Game
             this.btnGoEast.TabIndex = 14;
             this.btnGoEast.Text = "Go East";
             this.btnGoEast.UseVisualStyleBackColor = true;
+            this.btnGoEast.Click += new System.EventHandler(this.btnGoEast_Click);
             // 
             // btnGoSouth
             // 
@@ -216,6 +218,7 @@ namespace Adventure_RPG_Game
             this.btnGoSouth.TabIndex = 15;
             this.btnGoSouth.Text = "Go South";
             this.btnGoSouth.UseVisualStyleBackColor = true;
+            this.btnGoSouth.Click += new System.EventHandler(this.btnGoSouth_Click);
             // 
             // btnGoWest
             // 
@@ -225,6 +228,7 @@ namespace Adventure_RPG_Game
             this.btnGoWest.TabIndex = 16;
             this.btnGoWest.Text = "Go West";
             this.btnGoWest.UseVisualStyleBackColor = true;
+            this.btnGoWest.Click += new System.EventHandler(this.btnGoWest_Click);
             // 
             // txtBoxLocation
             // 

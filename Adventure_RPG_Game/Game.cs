@@ -19,15 +19,13 @@ namespace Adventure_RPG_Game
         {
             InitializeComponent();
             _player = new Player(20, 20, 0, 0, 1);
-
+            _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
             label_experience.Text = _player.ExperiencePoints.ToString();
             label_gold.Text = _player.Gold.ToString();
             label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
             label_level.Text = _player.Level.ToString();
-
-            System.Console.WriteLine("Hi");
-            Trace.WriteLine(World.PopulateLocations());
-            
+            updateLocationTxtBox();
+            checkIfThereIsLocation();
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -65,5 +63,43 @@ namespace Adventure_RPG_Game
 
         }
 
+        private void btnGoNorth_Click(object sender, EventArgs e)
+        {
+            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
+            checkIfThereIsLocation();
+            updateLocationTxtBox();
+        }
+
+        private void btnGoWest_Click(object sender, EventArgs e)
+        {
+            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToWest);
+            checkIfThereIsLocation();
+            updateLocationTxtBox();
+        }
+
+        private void btnGoEast_Click(object sender, EventArgs e)
+        {
+            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToEast);
+            checkIfThereIsLocation();
+            updateLocationTxtBox();
+        }
+
+        private void btnGoSouth_Click(object sender, EventArgs e)
+        {
+            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
+            checkIfThereIsLocation();
+            updateLocationTxtBox();
+        }
+        private void updateLocationTxtBox()
+        {
+            txtBoxLocation.Text = _player.CurrentLocation.Name + Environment.NewLine + _player.CurrentLocation.Description;
+        }
+        private void checkIfThereIsLocation()
+        {
+            btnGoNorth.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToNorth != null);
+            btnGoSouth.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToSouth != null);
+            btnGoWest.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToWest != null);
+            btnGoEast.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToEast != null);
+        }
     }
 }
