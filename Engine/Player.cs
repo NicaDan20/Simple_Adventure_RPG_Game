@@ -20,19 +20,37 @@ namespace Engine
             ExperiencePoints = _experiencePoints;
             Level = _level;
             Inventory = new List<InventoryItem>();
-            InventoryItem _startingWeapon = new InventoryItem(ObjectMapper.ReturnItemByID(1), 1);
-            InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
-            InventoryItem _startingPotion1 = new InventoryItem(ObjectMapper.ReturnItemByID(10), 3);
-            InventoryItem _startingPotion2 = new InventoryItem(ObjectMapper.ReturnItemByID(13), 2);
-            Inventory.Add(_startingWeapon);
-            Inventory.Add(_startingWeapon2);
-            Inventory.Add(_startingPotion1);
-            Inventory.Add(_startingPotion2);
+            //InventoryItem _startingWeapon = new InventoryItem(ObjectMapper.ReturnItemByID(1), 1);
+            //InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
+            //InventoryItem _startingPotion1 = new InventoryItem(ObjectMapper.ReturnItemByID(10), 3);
+            //InventoryItem _startingPotion2 = new InventoryItem(ObjectMapper.ReturnItemByID(13), 2);
+            //Inventory.Add(_startingWeapon);
+            //Inventory.Add(_startingWeapon2);
+            //Inventory.Add(_startingPotion1);
+            //Inventory.Add(_startingPotion2);
             Quests = new List<PlayerQuest>();
         }
         public void MoveTo(Location _newLocation)
         {
             CurrentLocation = _newLocation;
+        }
+
+        public bool checkIfYouCanEnterLocation (Location _newLocation)
+        {
+            if (_newLocation.ItemRequiredToEnter == null)
+            {
+                return true;
+            } else
+            {
+                foreach (InventoryItem item in Inventory)
+                {
+                    if (item.Details == _newLocation.ItemRequiredToEnter)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
         public bool checkIfThereIsQuest(Quest q)
@@ -95,5 +113,7 @@ namespace Engine
                 CurrentHitPoints += quantity;
             }
         }
+
+
     }
 }

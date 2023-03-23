@@ -18,7 +18,7 @@ namespace Adventure_RPG_Game
         public Game()
         {
             InitializeComponent();
-            _player = new Player(5, 20, 0, 0, 1);
+            _player = new Player(20, 20, 0, 0, 1);
             _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
             updatePlayerStats();
             updateLocationTxtBox();
@@ -67,45 +67,22 @@ namespace Adventure_RPG_Game
 
         private void btnGoNorth_Click(object sender, EventArgs e)
         {
-            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
-            checkIfThereIsLocation();
-            updateLocationTxtBox();
-            nameGoToBtns();
-            checkForQuests();
-            refreshWeaponComboBox();
+            doMove(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
         }
 
         private void btnGoWest_Click(object sender, EventArgs e)
         {
-            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToWest);
-            checkIfThereIsLocation();
-            updateLocationTxtBox();
-            nameGoToBtns();
-            checkForQuests();
-            refreshWeaponComboBox();
+            doMove(_player.CurrentLocation.AdjacentLocations.LocationToWest);
         }
 
         private void btnGoEast_Click(object sender, EventArgs e)
         {
-            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToEast);
-            checkIfThereIsLocation();
-            updateLocationTxtBox();
-            nameGoToBtns();
-            checkForQuests();
-            refreshWeaponComboBox();
-
+            doMove(_player.CurrentLocation.AdjacentLocations.LocationToEast);
         }
 
         private void btnGoSouth_Click(object sender, EventArgs e)
         {
-            _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
-            checkIfThereIsLocation();
-            updateLocationTxtBox();
-            nameGoToBtns();
-            checkForQuests();
-            refreshWeaponComboBox();
-
-
+            doMove(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
         }
         private void updateLocationTxtBox()
         {
@@ -249,8 +226,14 @@ namespace Adventure_RPG_Game
             {
                 cboPotions.Visible = false;
                 btnUsePotion.Visible = false;
+                labelHealFor.Visible = false;
+                labelQuantity.Visible = false;
             } else
             {
+                cboPotions.Visible = true;
+                btnUsePotion.Visible = true;
+                labelHealFor.Visible = true;
+                labelQuantity.Visible = true;
                 cboPotions.DataSource = potions;
                 cboPotions.DisplayMember = "Name";
                 cboPotions.ValueMember = "ID";
@@ -306,6 +289,22 @@ namespace Adventure_RPG_Game
             label_gold.Text = _player.Gold.ToString();
             label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
             label_level.Text = _player.Level.ToString();
+        }
+
+        private void doMove(Location _newLocation)
+        {
+            if (_player.checkIfYouCanEnterLocation(_newLocation) == true)
+            {
+                _player.MoveTo(_newLocation);
+                checkIfThereIsLocation();
+                updateLocationTxtBox();
+                nameGoToBtns();
+                checkForQuests();
+                refreshWeaponComboBox();
+            } else
+            {
+                txtBoxMessages.Text += "You cannot enter " + _newLocation.Name + " just yet. You need the " + _newLocation.ItemRequiredToEnter.Name + " to enter.";
+            }
         }
     }
 }
