@@ -29,6 +29,7 @@ namespace Adventure_RPG_Game
             nameGoToBtns();
             checkForQuests();
             refreshQuestDataGrid();
+            showWeaponsDropDown(refreshWeaponComboBox());
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -73,6 +74,7 @@ namespace Adventure_RPG_Game
             updateLocationTxtBox();
             nameGoToBtns();
             checkForQuests();
+            refreshWeaponComboBox();
         }
 
         private void btnGoWest_Click(object sender, EventArgs e)
@@ -82,7 +84,7 @@ namespace Adventure_RPG_Game
             updateLocationTxtBox();
             nameGoToBtns();
             checkForQuests();
-
+            refreshWeaponComboBox();
         }
 
         private void btnGoEast_Click(object sender, EventArgs e)
@@ -92,6 +94,7 @@ namespace Adventure_RPG_Game
             updateLocationTxtBox();
             nameGoToBtns();
             checkForQuests();
+            refreshWeaponComboBox();
 
         }
 
@@ -102,6 +105,8 @@ namespace Adventure_RPG_Game
             updateLocationTxtBox();
             nameGoToBtns();
             checkForQuests();
+            refreshWeaponComboBox();
+
 
         }
         private void updateLocationTxtBox()
@@ -178,6 +183,50 @@ namespace Adventure_RPG_Game
             {
                 gridQuests.Rows.Add(new[] { pq.Details.Name, pq.Details.Description, pq.IsCompleted.ToString() });
             }
+        }
+
+        private List<Weapon> refreshWeaponComboBox()
+        {
+            List<Weapon> weapons = new List<Weapon>();
+            foreach (InventoryItem item in _player.Inventory)
+            {
+                if (item.Details is Weapon)
+                {
+                    if (item.Quantity > 0)
+                    {
+                        weapons.Add((Weapon)item.Details);
+                    }
+                }
+            }
+            return weapons;
+        }
+
+        private void showWeaponsDropDown(List<Weapon> weapons)
+        {
+            if (weapons.Count == 0)
+            {
+                cboWeapons.Visible = false;
+                btnUseWeapon.Visible = false;
+            }
+            else
+            {
+                cboWeapons.DataSource = weapons;
+                cboWeapons.DisplayMember = "Name";
+                cboWeapons.ValueMember = "ID";
+                cboWeapons.SelectedIndex = 0;
+                showWeaponDamage(weapons[0]);
+            }
+        }
+
+        private void showWeaponDamage(Weapon selectedWeapon)
+        {
+            labelWeaponDamage.Text = "Damage: " + selectedWeapon.MinimumDamage + "-" + selectedWeapon.MaximumDamage;
+        }
+
+        private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<Weapon> weapons = refreshWeaponComboBox();
+            showWeaponDamage(weapons[cboWeapons.SelectedIndex]);
         }
     }
 }

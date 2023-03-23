@@ -53,6 +53,8 @@ namespace Adventure_RPG_Game
             this.gridInventory = new System.Windows.Forms.DataGridView();
             this.btnPickUpQuest = new System.Windows.Forms.Button();
             this.btnTurnInQuest = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelWeaponDamage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gridQuests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).BeginInit();
             this.SuspendLayout();
@@ -161,14 +163,18 @@ namespace Adventure_RPG_Game
             // 
             // cboWeapons
             // 
+            this.cboWeapons.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboWeapons.FormattingEnabled = true;
             this.cboWeapons.Location = new System.Drawing.Point(103, 56);
+            this.cboWeapons.MaxDropDownItems = 10;
             this.cboWeapons.Name = "cboWeapons";
             this.cboWeapons.Size = new System.Drawing.Size(121, 23);
             this.cboWeapons.TabIndex = 9;
+            this.cboWeapons.SelectedIndexChanged += new System.EventHandler(this.cboWeapons_SelectedIndexChanged);
             // 
             // cboPotions
             // 
+            this.cboPotions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPotions.FormattingEnabled = true;
             this.cboPotions.Location = new System.Drawing.Point(103, 96);
             this.cboPotions.Name = "cboPotions";
@@ -196,7 +202,7 @@ namespace Adventure_RPG_Game
             // btnGoNorth
             // 
             this.btnGoNorth.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnGoNorth.Location = new System.Drawing.Point(294, 67);
+            this.btnGoNorth.Location = new System.Drawing.Point(708, 68);
             this.btnGoNorth.Name = "btnGoNorth";
             this.btnGoNorth.Size = new System.Drawing.Size(120, 23);
             this.btnGoNorth.TabIndex = 13;
@@ -206,7 +212,7 @@ namespace Adventure_RPG_Game
             // btnGoEast
             // 
             this.btnGoEast.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnGoEast.Location = new System.Drawing.Point(371, 96);
+            this.btnGoEast.Location = new System.Drawing.Point(785, 97);
             this.btnGoEast.Name = "btnGoEast";
             this.btnGoEast.Size = new System.Drawing.Size(120, 23);
             this.btnGoEast.TabIndex = 14;
@@ -216,7 +222,7 @@ namespace Adventure_RPG_Game
             // btnGoSouth
             // 
             this.btnGoSouth.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnGoSouth.Location = new System.Drawing.Point(294, 125);
+            this.btnGoSouth.Location = new System.Drawing.Point(708, 126);
             this.btnGoSouth.Name = "btnGoSouth";
             this.btnGoSouth.Size = new System.Drawing.Size(120, 23);
             this.btnGoSouth.TabIndex = 15;
@@ -226,7 +232,7 @@ namespace Adventure_RPG_Game
             // btnGoWest
             // 
             this.btnGoWest.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnGoWest.Location = new System.Drawing.Point(245, 95);
+            this.btnGoWest.Location = new System.Drawing.Point(659, 96);
             this.btnGoWest.Name = "btnGoWest";
             this.btnGoWest.Size = new System.Drawing.Size(120, 23);
             this.btnGoWest.TabIndex = 16;
@@ -312,12 +318,33 @@ namespace Adventure_RPG_Game
             this.btnTurnInQuest.Text = "Turn In Quest";
             this.btnTurnInQuest.UseVisualStyleBackColor = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(0, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(38, 15);
+            this.label6.TabIndex = 23;
+            this.label6.Text = "label6";
+            // 
+            // labelWeaponDamage
+            // 
+            this.labelWeaponDamage.AutoSize = true;
+            this.labelWeaponDamage.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelWeaponDamage.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.labelWeaponDamage.Location = new System.Drawing.Point(231, 56);
+            this.labelWeaponDamage.Name = "labelWeaponDamage";
+            this.labelWeaponDamage.Size = new System.Drawing.Size(0, 18);
+            this.labelWeaponDamage.TabIndex = 24;
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuText;
             this.ClientSize = new System.Drawing.Size(934, 613);
+            this.Controls.Add(this.labelWeaponDamage);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.btnTurnInQuest);
             this.Controls.Add(this.btnPickUpQuest);
             this.Controls.Add(this.gridInventory);
@@ -376,6 +403,8 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.DataGridView gridInventory;
         private System.Windows.Forms.Button btnPickUpQuest;
         private System.Windows.Forms.Button btnTurnInQuest;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelWeaponDamage;
     }
 }
 

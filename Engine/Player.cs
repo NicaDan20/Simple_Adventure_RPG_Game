@@ -20,6 +20,10 @@ namespace Engine
             ExperiencePoints = _experiencePoints;
             Level = _level;
             Inventory = new List<InventoryItem>();
+            InventoryItem _startingWeapon = new InventoryItem(ObjectMapper.ReturnItemByID(1), 1);
+            InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
+            Inventory.Add(_startingWeapon);
+            Inventory.Add(_startingWeapon2);
             Quests = new List<PlayerQuest>();
         }
         public void MoveTo(Location _newLocation)
