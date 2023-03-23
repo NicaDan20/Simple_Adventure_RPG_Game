@@ -28,6 +28,7 @@ namespace Adventure_RPG_Game
             refreshQuestDataGrid();
             showWeaponsDropDown(refreshWeaponComboBox());
             showPotionsDropDown(refreshPotionComboBox());
+            loadInventory();
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -303,8 +304,28 @@ namespace Adventure_RPG_Game
                 refreshWeaponComboBox();
             } else
             {
-                txtBoxMessages.Text += "You cannot enter " + _newLocation.Name + " just yet. You need the " + _newLocation.ItemRequiredToEnter.Name + " to enter.";
+                txtBoxMessages.Text +=  "You cannot enter " + _newLocation.Name + " just yet. You need the " + _newLocation.ItemRequiredToEnter.Name + " to enter." + Environment.NewLine;
             }
+        }
+
+        private void loadInventory()
+        {
+            gridInventory.RowHeadersVisible = false;
+            gridInventory.ColumnCount = 2;
+            gridInventory.Columns[0].Name = "Item";
+            gridInventory.Columns[0].Width = 450;
+            gridInventory.Columns[1].Name = "Quantity";
+            gridInventory.Columns[1].Width = 200;
+            gridInventory.Rows.Clear();
+
+            foreach (InventoryItem item in _player.Inventory)
+            {
+                if (item.Details is MiscItem)
+                {
+                    gridInventory.Rows.Add(new[] { item.Details.Name, item.Quantity.ToString() });
+                }
+            }
+
         }
     }
 }

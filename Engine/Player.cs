@@ -28,6 +28,8 @@ namespace Engine
             //Inventory.Add(_startingWeapon2);
             //Inventory.Add(_startingPotion1);
             //Inventory.Add(_startingPotion2);
+            InventoryItem _adventurerPass = new(ObjectMapper.ReturnItemByID(11), 1);
+            Inventory.Add(_adventurerPass);
             Quests = new List<PlayerQuest>();
         }
         public void MoveTo(Location _newLocation)
