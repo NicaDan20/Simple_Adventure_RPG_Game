@@ -26,5 +26,39 @@ namespace Engine
         {
             CurrentLocation = _newLocation;
         }
+
+        public bool checkIfThereIsQuest(Quest q)
+        {
+            bool isQuestHere = false;
+            if (q != null)
+            {
+                isQuestHere = true;
+            }
+            return isQuestHere;
+        }
+        public bool checkIfThereIsQuestInLog(Quest q)
+        {
+            bool isQuestHere = false;
+            foreach (PlayerQuest pq in Quests)
+            {
+                if (pq.Details == q)
+                {
+                    isQuestHere = true;
+                    break;
+                }
+            }
+            return isQuestHere;
+        }
+        public void pickUpQuest(Quest q)
+        {
+            if (checkIfThereIsQuest(q))
+            {
+                if (!checkIfThereIsQuestInLog(q))
+                {
+                    PlayerQuest quest = new PlayerQuest(q);
+                    Quests.Add(quest);
+                }
+            }
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace Adventure_RPG_Game
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -50,6 +51,8 @@ namespace Adventure_RPG_Game
             this.txtBoxMessages = new System.Windows.Forms.RichTextBox();
             this.gridQuests = new System.Windows.Forms.DataGridView();
             this.gridInventory = new System.Windows.Forms.DataGridView();
+            this.btnPickUpQuest = new System.Windows.Forms.Button();
+            this.btnTurnInQuest = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridQuests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +62,7 @@ namespace Adventure_RPG_Game
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.LawnGreen;
-            this.label1.Location = new System.Drawing.Point(12, 19);
+            this.label1.Location = new System.Drawing.Point(12, 175);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 18);
             this.label1.TabIndex = 0;
@@ -71,7 +74,7 @@ namespace Adventure_RPG_Game
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label2.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label2.Location = new System.Drawing.Point(407, 19);
+            this.label2.Location = new System.Drawing.Point(10, 232);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 18);
             this.label2.TabIndex = 1;
@@ -83,7 +86,7 @@ namespace Adventure_RPG_Game
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.DeepPink;
-            this.label3.Location = new System.Drawing.Point(667, 19);
+            this.label3.Location = new System.Drawing.Point(10, 259);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(57, 18);
             this.label3.TabIndex = 2;
@@ -95,7 +98,7 @@ namespace Adventure_RPG_Game
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label4.ForeColor = System.Drawing.Color.Gold;
-            this.label4.Location = new System.Drawing.Point(222, 19);
+            this.label4.Location = new System.Drawing.Point(12, 202);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(56, 18);
             this.label4.TabIndex = 3;
@@ -107,7 +110,7 @@ namespace Adventure_RPG_Game
             this.label_hit_points.AutoSize = true;
             this.label_hit_points.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label_hit_points.ForeColor = System.Drawing.Color.LawnGreen;
-            this.label_hit_points.Location = new System.Drawing.Point(111, 19);
+            this.label_hit_points.Location = new System.Drawing.Point(111, 175);
             this.label_hit_points.Name = "label_hit_points";
             this.label_hit_points.Size = new System.Drawing.Size(0, 18);
             this.label_hit_points.TabIndex = 4;
@@ -117,7 +120,7 @@ namespace Adventure_RPG_Game
             this.label_gold.AutoSize = true;
             this.label_gold.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label_gold.ForeColor = System.Drawing.Color.Gold;
-            this.label_gold.Location = new System.Drawing.Point(284, 19);
+            this.label_gold.Location = new System.Drawing.Point(74, 202);
             this.label_gold.Name = "label_gold";
             this.label_gold.Size = new System.Drawing.Size(0, 18);
             this.label_gold.TabIndex = 5;
@@ -128,7 +131,7 @@ namespace Adventure_RPG_Game
             this.label_experience.AutoSize = true;
             this.label_experience.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label_experience.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label_experience.Location = new System.Drawing.Point(500, 19);
+            this.label_experience.Location = new System.Drawing.Point(103, 232);
             this.label_experience.Name = "label_experience";
             this.label_experience.Size = new System.Drawing.Size(0, 18);
             this.label_experience.TabIndex = 6;
@@ -138,7 +141,7 @@ namespace Adventure_RPG_Game
             this.label_level.AutoSize = true;
             this.label_level.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label_level.ForeColor = System.Drawing.Color.DeepPink;
-            this.label_level.Location = new System.Drawing.Point(709, 19);
+            this.label_level.Location = new System.Drawing.Point(52, 259);
             this.label_level.Name = "label_level";
             this.label_level.Size = new System.Drawing.Size(0, 18);
             this.label_level.TabIndex = 7;
@@ -150,7 +153,7 @@ namespace Adventure_RPG_Game
             this.label5.Cursor = System.Windows.Forms.Cursors.Default;
             this.label5.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(12, 114);
+            this.label5.Location = new System.Drawing.Point(12, 26);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(102, 18);
             this.label5.TabIndex = 8;
@@ -159,7 +162,7 @@ namespace Adventure_RPG_Game
             // cboWeapons
             // 
             this.cboWeapons.FormattingEnabled = true;
-            this.cboWeapons.Location = new System.Drawing.Point(103, 144);
+            this.cboWeapons.Location = new System.Drawing.Point(103, 56);
             this.cboWeapons.Name = "cboWeapons";
             this.cboWeapons.Size = new System.Drawing.Size(121, 23);
             this.cboWeapons.TabIndex = 9;
@@ -167,14 +170,14 @@ namespace Adventure_RPG_Game
             // cboPotions
             // 
             this.cboPotions.FormattingEnabled = true;
-            this.cboPotions.Location = new System.Drawing.Point(103, 184);
+            this.cboPotions.Location = new System.Drawing.Point(103, 96);
             this.cboPotions.Name = "cboPotions";
             this.cboPotions.Size = new System.Drawing.Size(121, 23);
             this.cboPotions.TabIndex = 10;
             // 
             // btnUseWeapon
             // 
-            this.btnUseWeapon.Location = new System.Drawing.Point(12, 144);
+            this.btnUseWeapon.Location = new System.Drawing.Point(12, 56);
             this.btnUseWeapon.Name = "btnUseWeapon";
             this.btnUseWeapon.Size = new System.Drawing.Size(75, 23);
             this.btnUseWeapon.TabIndex = 11;
@@ -183,7 +186,7 @@ namespace Adventure_RPG_Game
             // 
             // btnUsePotion
             // 
-            this.btnUsePotion.Location = new System.Drawing.Point(12, 183);
+            this.btnUsePotion.Location = new System.Drawing.Point(12, 95);
             this.btnUsePotion.Name = "btnUsePotion";
             this.btnUsePotion.Size = new System.Drawing.Size(75, 23);
             this.btnUsePotion.TabIndex = 12;
@@ -192,41 +195,41 @@ namespace Adventure_RPG_Game
             // 
             // btnGoNorth
             // 
-            this.btnGoNorth.Location = new System.Drawing.Point(34, 234);
+            this.btnGoNorth.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGoNorth.Location = new System.Drawing.Point(294, 67);
             this.btnGoNorth.Name = "btnGoNorth";
-            this.btnGoNorth.Size = new System.Drawing.Size(75, 23);
+            this.btnGoNorth.Size = new System.Drawing.Size(120, 23);
             this.btnGoNorth.TabIndex = 13;
-            this.btnGoNorth.Text = "Go North";
             this.btnGoNorth.UseVisualStyleBackColor = true;
             this.btnGoNorth.Click += new System.EventHandler(this.btnGoNorth_Click);
             // 
             // btnGoEast
             // 
-            this.btnGoEast.Location = new System.Drawing.Point(83, 263);
+            this.btnGoEast.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGoEast.Location = new System.Drawing.Point(371, 96);
             this.btnGoEast.Name = "btnGoEast";
-            this.btnGoEast.Size = new System.Drawing.Size(75, 23);
+            this.btnGoEast.Size = new System.Drawing.Size(120, 23);
             this.btnGoEast.TabIndex = 14;
-            this.btnGoEast.Text = "Go East";
             this.btnGoEast.UseVisualStyleBackColor = true;
             this.btnGoEast.Click += new System.EventHandler(this.btnGoEast_Click);
             // 
             // btnGoSouth
             // 
-            this.btnGoSouth.Location = new System.Drawing.Point(34, 292);
+            this.btnGoSouth.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGoSouth.Location = new System.Drawing.Point(294, 125);
             this.btnGoSouth.Name = "btnGoSouth";
-            this.btnGoSouth.Size = new System.Drawing.Size(75, 23);
+            this.btnGoSouth.Size = new System.Drawing.Size(120, 23);
             this.btnGoSouth.TabIndex = 15;
-            this.btnGoSouth.Text = "Go South";
             this.btnGoSouth.UseVisualStyleBackColor = true;
             this.btnGoSouth.Click += new System.EventHandler(this.btnGoSouth_Click);
             // 
             // btnGoWest
             // 
-            this.btnGoWest.Location = new System.Drawing.Point(2, 263);
+            this.btnGoWest.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnGoWest.Location = new System.Drawing.Point(245, 95);
             this.btnGoWest.Name = "btnGoWest";
-            this.btnGoWest.Size = new System.Drawing.Size(75, 23);
+            this.btnGoWest.Size = new System.Drawing.Size(120, 23);
             this.btnGoWest.TabIndex = 16;
-            this.btnGoWest.Text = "Go West";
             this.btnGoWest.UseVisualStyleBackColor = true;
             this.btnGoWest.Click += new System.EventHandler(this.btnGoWest_Click);
             // 
@@ -235,13 +238,13 @@ namespace Adventure_RPG_Game
             this.txtBoxLocation.Location = new System.Drawing.Point(12, 333);
             this.txtBoxLocation.Name = "txtBoxLocation";
             this.txtBoxLocation.ReadOnly = true;
-            this.txtBoxLocation.Size = new System.Drawing.Size(272, 84);
+            this.txtBoxLocation.Size = new System.Drawing.Size(272, 154);
             this.txtBoxLocation.TabIndex = 17;
             this.txtBoxLocation.Text = "";
             // 
             // txtBoxMessages
             // 
-            this.txtBoxMessages.Location = new System.Drawing.Point(12, 432);
+            this.txtBoxMessages.Location = new System.Drawing.Point(12, 494);
             this.txtBoxMessages.Name = "txtBoxMessages";
             this.txtBoxMessages.ReadOnly = true;
             this.txtBoxMessages.Size = new System.Drawing.Size(272, 107);
@@ -254,16 +257,21 @@ namespace Adventure_RPG_Game
             this.gridQuests.AllowUserToDeleteRows = false;
             this.gridQuests.AllowUserToResizeColumns = false;
             this.gridQuests.AllowUserToResizeRows = false;
+            this.gridQuests.BackgroundColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.gridQuests.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridQuests.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridQuests.Enabled = false;
-            this.gridQuests.Location = new System.Drawing.Point(302, 432);
+            this.gridQuests.Location = new System.Drawing.Point(302, 475);
             this.gridQuests.MultiSelect = false;
             this.gridQuests.Name = "gridQuests";
             this.gridQuests.ReadOnly = true;
             this.gridQuests.RowHeadersVisible = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.gridQuests.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gridQuests.RowTemplate.Height = 25;
-            this.gridQuests.Size = new System.Drawing.Size(470, 107);
+            this.gridQuests.RowTemplate.ReadOnly = true;
+            this.gridQuests.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.gridQuests.Size = new System.Drawing.Size(620, 126);
             this.gridQuests.TabIndex = 19;
             // 
             // gridInventory
@@ -272,24 +280,46 @@ namespace Adventure_RPG_Game
             this.gridInventory.AllowUserToDeleteRows = false;
             this.gridInventory.AllowUserToResizeColumns = false;
             this.gridInventory.AllowUserToResizeRows = false;
+            this.gridInventory.BackgroundColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.gridInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridInventory.Enabled = false;
-            this.gridInventory.Location = new System.Drawing.Point(302, 263);
+            this.gridInventory.Location = new System.Drawing.Point(302, 314);
             this.gridInventory.MultiSelect = false;
             this.gridInventory.Name = "gridInventory";
             this.gridInventory.ReadOnly = true;
             this.gridInventory.RowHeadersVisible = false;
             this.gridInventory.RowTemplate.Height = 25;
-            this.gridInventory.Size = new System.Drawing.Size(470, 154);
+            this.gridInventory.Size = new System.Drawing.Size(620, 154);
             this.gridInventory.TabIndex = 20;
+            // 
+            // btnPickUpQuest
+            // 
+            this.btnPickUpQuest.Location = new System.Drawing.Point(10, 136);
+            this.btnPickUpQuest.Name = "btnPickUpQuest";
+            this.btnPickUpQuest.Size = new System.Drawing.Size(102, 23);
+            this.btnPickUpQuest.TabIndex = 21;
+            this.btnPickUpQuest.Text = "Pick up Quest";
+            this.btnPickUpQuest.UseVisualStyleBackColor = true;
+            this.btnPickUpQuest.Click += new System.EventHandler(this.btnPickUpQuest_Click);
+            // 
+            // btnTurnInQuest
+            // 
+            this.btnTurnInQuest.Location = new System.Drawing.Point(119, 136);
+            this.btnTurnInQuest.Name = "btnTurnInQuest";
+            this.btnTurnInQuest.Size = new System.Drawing.Size(105, 23);
+            this.btnTurnInQuest.TabIndex = 22;
+            this.btnTurnInQuest.Text = "Turn In Quest";
+            this.btnTurnInQuest.UseVisualStyleBackColor = true;
             // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuText;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(934, 613);
+            this.Controls.Add(this.btnTurnInQuest);
+            this.Controls.Add(this.btnPickUpQuest);
             this.Controls.Add(this.gridInventory);
             this.Controls.Add(this.gridQuests);
             this.Controls.Add(this.txtBoxMessages);
@@ -344,6 +374,8 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.RichTextBox txtBoxMessages;
         private System.Windows.Forms.DataGridView gridQuests;
         private System.Windows.Forms.DataGridView gridInventory;
+        private System.Windows.Forms.Button btnPickUpQuest;
+        private System.Windows.Forms.Button btnTurnInQuest;
     }
 }
 

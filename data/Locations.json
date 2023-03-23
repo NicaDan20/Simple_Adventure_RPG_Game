@@ -41,7 +41,7 @@
     "ID": 5,
     "Name": "Farmhouse",
     "Description": "There is a small farmhouse, with a farmer standing on the porch. A heavy scent of cow dung permeates the air, but it is not wholly unpleasant. You can hear chickens strutting about.",
-    "QuestAvailableHereID": 1,
+    "QuestAvailableHereID": 2,
     "AdjacentLocations": {
       "NorthID": 6,
       "SouthID": 2

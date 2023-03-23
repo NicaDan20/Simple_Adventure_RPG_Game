@@ -26,6 +26,9 @@ namespace Adventure_RPG_Game
             label_level.Text = _player.Level.ToString();
             updateLocationTxtBox();
             checkIfThereIsLocation();
+            nameGoToBtns();
+            checkForQuests();
+            refreshQuestDataGrid();
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -68,6 +71,8 @@ namespace Adventure_RPG_Game
             _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
             checkIfThereIsLocation();
             updateLocationTxtBox();
+            nameGoToBtns();
+            checkForQuests();
         }
 
         private void btnGoWest_Click(object sender, EventArgs e)
@@ -75,6 +80,9 @@ namespace Adventure_RPG_Game
             _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToWest);
             checkIfThereIsLocation();
             updateLocationTxtBox();
+            nameGoToBtns();
+            checkForQuests();
+
         }
 
         private void btnGoEast_Click(object sender, EventArgs e)
@@ -82,6 +90,9 @@ namespace Adventure_RPG_Game
             _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToEast);
             checkIfThereIsLocation();
             updateLocationTxtBox();
+            nameGoToBtns();
+            checkForQuests();
+
         }
 
         private void btnGoSouth_Click(object sender, EventArgs e)
@@ -89,6 +100,9 @@ namespace Adventure_RPG_Game
             _player.MoveTo(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
             checkIfThereIsLocation();
             updateLocationTxtBox();
+            nameGoToBtns();
+            checkForQuests();
+
         }
         private void updateLocationTxtBox()
         {
@@ -100,6 +114,70 @@ namespace Adventure_RPG_Game
             btnGoSouth.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToSouth != null);
             btnGoWest.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToWest != null);
             btnGoEast.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToEast != null);
+        }
+        private void nameGoToBtns()
+        {
+            if (_player.CurrentLocation.AdjacentLocations.LocationToEast != null)
+            {
+                btnGoEast.Text = "Go to " + _player.CurrentLocation.AdjacentLocations.LocationToEast.Name;
+            }
+            if (_player.CurrentLocation.AdjacentLocations.LocationToWest != null)
+            {
+                btnGoWest.Text = "Go to " + _player.CurrentLocation.AdjacentLocations.LocationToWest.Name;
+            }
+            if (_player.CurrentLocation.AdjacentLocations.LocationToNorth != null)
+            {
+                btnGoNorth.Text = "Go to " + _player.CurrentLocation.AdjacentLocations.LocationToNorth.Name;
+            }
+            if (_player.CurrentLocation.AdjacentLocations.LocationToSouth != null)
+            {
+                btnGoSouth.Text = "Go to " + _player.CurrentLocation.AdjacentLocations.LocationToSouth.Name;
+            }
+        }
+        
+        private void checkForQuests()
+        {
+            if (_player.checkIfThereIsQuest(_player.CurrentLocation.QuestAvailableHere)) {
+                if (_player.checkIfThereIsQuestInLog(_player.CurrentLocation.QuestAvailableHere))
+                {
+                    btnPickUpQuest.Visible = false;
+                } else
+                {
+                    btnPickUpQuest.Visible = true;
+                }
+            } else
+            {
+                btnPickUpQuest.Visible = false;
+            }
+        }
+
+        private void btnPickUpQuest_Click(object sender, EventArgs e)
+        {
+            _player.pickUpQuest(_player.CurrentLocation.QuestAvailableHere);
+            txtBoxMessages.Text += "You have accepted the following quest: " + _player.CurrentLocation.QuestAvailableHere.Name + Environment.NewLine;
+            foreach (PlayerQuest pq in _player.Quests)
+            {
+                txtBoxMessages.Text += Environment.NewLine + "-" + pq.Details.Name;
+            }
+            checkForQuests();
+            refreshQuestDataGrid();
+        }
+
+        private void refreshQuestDataGrid()
+        {
+            gridQuests.RowHeadersVisible = false;
+            gridQuests.ColumnCount = 3;
+            gridQuests.Columns[0].Name = "Quest";
+            gridQuests.Columns[0].Width = 210;
+            gridQuests.Columns[1].Name = "Description";
+            gridQuests.Columns[1].Width = 327;
+            gridQuests.Columns[2].Name = "Completed?";
+            gridQuests.Rows.Clear();
+
+            foreach (PlayerQuest pq in _player.Quests)
+            {
+                gridQuests.Rows.Add(new[] { pq.Details.Name, pq.Details.Description, pq.IsCompleted.ToString() });
+            }
         }
     }
 }
