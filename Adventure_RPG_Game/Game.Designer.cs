@@ -55,6 +55,8 @@ namespace Adventure_RPG_Game
             this.btnTurnInQuest = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.labelWeaponDamage = new System.Windows.Forms.Label();
+            this.labelQuantity = new System.Windows.Forms.Label();
+            this.labelHealFor = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gridQuests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).BeginInit();
             this.SuspendLayout();
@@ -180,6 +182,7 @@ namespace Adventure_RPG_Game
             this.cboPotions.Name = "cboPotions";
             this.cboPotions.Size = new System.Drawing.Size(121, 23);
             this.cboPotions.TabIndex = 10;
+            this.cboPotions.SelectedIndexChanged += new System.EventHandler(this.cboPotions_SelectedIndexChanged);
             // 
             // btnUseWeapon
             // 
@@ -198,6 +201,7 @@ namespace Adventure_RPG_Game
             this.btnUsePotion.TabIndex = 12;
             this.btnUsePotion.Text = "Use";
             this.btnUsePotion.UseVisualStyleBackColor = true;
+            this.btnUsePotion.Click += new System.EventHandler(this.btnUsePotion_Click);
             // 
             // btnGoNorth
             // 
@@ -337,12 +341,34 @@ namespace Adventure_RPG_Game
             this.labelWeaponDamage.Size = new System.Drawing.Size(0, 18);
             this.labelWeaponDamage.TabIndex = 24;
             // 
+            // labelQuantity
+            // 
+            this.labelQuantity.AutoSize = true;
+            this.labelQuantity.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelQuantity.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.labelQuantity.Location = new System.Drawing.Point(231, 102);
+            this.labelQuantity.Name = "labelQuantity";
+            this.labelQuantity.Size = new System.Drawing.Size(0, 18);
+            this.labelQuantity.TabIndex = 25;
+            // 
+            // labelHealFor
+            // 
+            this.labelHealFor.AutoSize = true;
+            this.labelHealFor.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelHealFor.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.labelHealFor.Location = new System.Drawing.Point(354, 102);
+            this.labelHealFor.Name = "labelHealFor";
+            this.labelHealFor.Size = new System.Drawing.Size(0, 18);
+            this.labelHealFor.TabIndex = 26;
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuText;
             this.ClientSize = new System.Drawing.Size(934, 613);
+            this.Controls.Add(this.labelHealFor);
+            this.Controls.Add(this.labelQuantity);
             this.Controls.Add(this.labelWeaponDamage);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnTurnInQuest);
@@ -405,6 +431,8 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.Button btnTurnInQuest;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label labelWeaponDamage;
+        private System.Windows.Forms.Label labelQuantity;
+        private System.Windows.Forms.Label labelHealFor;
     }
 }
 

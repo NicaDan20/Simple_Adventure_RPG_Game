@@ -22,8 +22,12 @@ namespace Engine
             Inventory = new List<InventoryItem>();
             InventoryItem _startingWeapon = new InventoryItem(ObjectMapper.ReturnItemByID(1), 1);
             InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
+            InventoryItem _startingPotion1 = new InventoryItem(ObjectMapper.ReturnItemByID(10), 3);
+            InventoryItem _startingPotion2 = new InventoryItem(ObjectMapper.ReturnItemByID(13), 2);
             Inventory.Add(_startingWeapon);
             Inventory.Add(_startingWeapon2);
+            Inventory.Add(_startingPotion1);
+            Inventory.Add(_startingPotion2);
             Quests = new List<PlayerQuest>();
         }
         public void MoveTo(Location _newLocation)
@@ -62,6 +66,33 @@ namespace Engine
                     PlayerQuest quest = new PlayerQuest(q);
                     Quests.Add(quest);
                 }
+            }
+        }
+
+        public void usePotion(HealingPotion potion)
+        {
+            foreach(InventoryItem item in Inventory.ToList())
+            {
+                if (item.Details == potion)
+                {
+                    item.Quantity--;
+                    healPlayer(potion.AmountToHeal);
+                    if (item.Quantity == 0)
+                    {
+                        Inventory.Remove(item);
+                    }
+                }
+            }
+        }
+
+        public void healPlayer (int quantity)
+        {
+            if (CurrentHitPoints + quantity >= MaximumHitPoints)
+            {
+                CurrentHitPoints = MaximumHitPoints;
+            } else
+            {
+                CurrentHitPoints += quantity;
             }
         }
     }

@@ -18,18 +18,16 @@ namespace Adventure_RPG_Game
         public Game()
         {
             InitializeComponent();
-            _player = new Player(20, 20, 0, 0, 1);
+            _player = new Player(5, 20, 0, 0, 1);
             _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
-            label_experience.Text = _player.ExperiencePoints.ToString();
-            label_gold.Text = _player.Gold.ToString();
-            label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
-            label_level.Text = _player.Level.ToString();
+            updatePlayerStats();
             updateLocationTxtBox();
             checkIfThereIsLocation();
             nameGoToBtns();
             checkForQuests();
             refreshQuestDataGrid();
             showWeaponsDropDown(refreshWeaponComboBox());
+            showPotionsDropDown(refreshPotionComboBox());
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -227,6 +225,87 @@ namespace Adventure_RPG_Game
         {
             List<Weapon> weapons = refreshWeaponComboBox();
             showWeaponDamage(weapons[cboWeapons.SelectedIndex]);
+        }
+
+        private List<HealingPotion> refreshPotionComboBox()
+        {
+            List<HealingPotion> healingPotions = new();
+            foreach (InventoryItem item in _player.Inventory)
+            {
+                if (item.Details is HealingPotion)
+                {
+                    if (item.Quantity > 0)
+                    {
+                        healingPotions.Add((HealingPotion)item.Details);
+                    }
+                }
+            }
+            return healingPotions;
+        }
+
+        private void showPotionsDropDown(List<HealingPotion> potions)
+        {
+            if (potions.Count == 0)
+            {
+                cboPotions.Visible = false;
+                btnUsePotion.Visible = false;
+            } else
+            {
+                cboPotions.DataSource = potions;
+                cboPotions.DisplayMember = "Name";
+                cboPotions.ValueMember = "ID";
+                cboPotions.SelectedIndex = 0;
+                showPotionDetails(potions[0]);
+            }
+        }
+
+        private void showHPHealed(HealingPotion selectedPotion)
+        {
+            labelHealFor.Text = "Heal Amount: " + selectedPotion.AmountToHeal;
+        }
+
+        private void showPotionQuantity (HealingPotion selectedPotion)
+        {
+            foreach(InventoryItem item in _player.Inventory)
+            {
+                if (item.Details == selectedPotion)
+                {
+                    labelQuantity.Text = "Potions left: " + item.Quantity.ToString();
+                    break;
+                }
+            }
+        }
+
+        private void showPotionDetails(HealingPotion selectedPotion)
+        {
+            showHPHealed(selectedPotion);
+            showPotionQuantity(selectedPotion);
+        }
+
+        private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<HealingPotion> potions = refreshPotionComboBox();
+            showPotionDetails(potions[cboPotions.SelectedIndex]);
+        }
+
+        private HealingPotion getActivePotion()
+        {
+            return (HealingPotion)cboPotions.SelectedItem;
+        }
+
+        private void btnUsePotion_Click(object sender, EventArgs e)
+        {
+            _player.usePotion(getActivePotion());
+            updatePlayerStats();
+            showPotionsDropDown(refreshPotionComboBox());
+        }
+
+        private void updatePlayerStats()
+        {
+            label_experience.Text = _player.ExperiencePoints.ToString();
+            label_gold.Text = _player.Gold.ToString();
+            label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
+            label_level.Text = _player.Level.ToString();
         }
     }
 }
