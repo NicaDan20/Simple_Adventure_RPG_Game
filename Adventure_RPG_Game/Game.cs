@@ -327,5 +327,10 @@ namespace Adventure_RPG_Game
             }
 
         }
+
+        private void spawnMonster()
+        {
+            
+        }
     }
 }
