@@ -10,7 +10,7 @@ namespace Engine
     public static class RandomNumberGenerator
     {
         private static readonly RNGCryptoServiceProvider _generator = new();
-        public static int generateNumber(int minimum, int maximum)
+        public static int GenerateNumber(int minimum, int maximum)
         {
             byte[] randomNumber = new byte[1];
             _generator.GetBytes(randomNumber);

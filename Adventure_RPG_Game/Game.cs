@@ -10,25 +10,39 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
+
 namespace Adventure_RPG_Game
 {
+    public enum CombatState { PlayerTurn, EnemyTurn, PlayerIsDead, EnemyIsDead, EnemyIsLooted };
     public partial class Game : Form
     {
         private Player _player;
+        private Monster _currentMonster;
+        private CombatState curState;
         public Game()
+        {
+            InitializeGame();
+        }
+
+        private void InitializeGame()
         {
             InitializeComponent();
             _player = new Player(20, 20, 0, 0, 1);
             _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
-            updatePlayerStats();
-            updateLocationTxtBox();
-            checkIfThereIsLocation();
-            nameGoToBtns();
-            checkForQuests();
-            refreshQuestDataGrid();
-            showWeaponsDropDown(refreshWeaponComboBox());
-            showPotionsDropDown(refreshPotionComboBox());
-            loadInventory();
+
+            UpdatePlayerStats();
+            UpdateLocationTxtBox();
+            CheckIfThereIsLocation();
+            NameGoToBtns();
+            CheckForQuests();
+            RefreshQuestDataGrid();
+            ShowWeaponsDropDown(RefreshWeaponComboBox());
+            ShowPotionsDropDown(RefreshPotionComboBox());
+            LoadInventory();
+            SpawnMonster();
+            LoadMonsterPanel();
+            LoadCombatButtons();
+
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -68,35 +82,35 @@ namespace Adventure_RPG_Game
 
         private void btnGoNorth_Click(object sender, EventArgs e)
         {
-            doMove(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
+            DoMove(_player.CurrentLocation.AdjacentLocations.LocationToNorth);
         }
 
         private void btnGoWest_Click(object sender, EventArgs e)
         {
-            doMove(_player.CurrentLocation.AdjacentLocations.LocationToWest);
+            DoMove(_player.CurrentLocation.AdjacentLocations.LocationToWest);
         }
 
         private void btnGoEast_Click(object sender, EventArgs e)
         {
-            doMove(_player.CurrentLocation.AdjacentLocations.LocationToEast);
+            DoMove(_player.CurrentLocation.AdjacentLocations.LocationToEast);
         }
 
         private void btnGoSouth_Click(object sender, EventArgs e)
         {
-            doMove(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
+            DoMove(_player.CurrentLocation.AdjacentLocations.LocationToSouth);
         }
-        private void updateLocationTxtBox()
+        private void UpdateLocationTxtBox()
         {
             txtBoxLocation.Text = _player.CurrentLocation.Name + Environment.NewLine + _player.CurrentLocation.Description;
         }
-        private void checkIfThereIsLocation()
+        private void CheckIfThereIsLocation()
         {
             btnGoNorth.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToNorth != null);
             btnGoSouth.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToSouth != null);
             btnGoWest.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToWest != null);
             btnGoEast.Visible = (_player.CurrentLocation.AdjacentLocations.LocationToEast != null);
         }
-        private void nameGoToBtns()
+        private void NameGoToBtns()
         {
             if (_player.CurrentLocation.AdjacentLocations.LocationToEast != null)
             {
@@ -116,10 +130,10 @@ namespace Adventure_RPG_Game
             }
         }
         
-        private void checkForQuests()
+        private void CheckForQuests()
         {
-            if (_player.checkIfThereIsQuest(_player.CurrentLocation.QuestAvailableHere)) {
-                if (_player.checkIfThereIsQuestInLog(_player.CurrentLocation.QuestAvailableHere))
+            if (_player.CheckIfThereIsQuest(_player.CurrentLocation.QuestAvailableHere)) {
+                if (_player.CheckIfThereIsQuestInLog(_player.CurrentLocation.QuestAvailableHere))
                 {
                     btnPickUpQuest.Visible = false;
                 } else
@@ -134,17 +148,17 @@ namespace Adventure_RPG_Game
 
         private void btnPickUpQuest_Click(object sender, EventArgs e)
         {
-            _player.pickUpQuest(_player.CurrentLocation.QuestAvailableHere);
+            _player.PickUpQuest(_player.CurrentLocation.QuestAvailableHere);
             txtBoxMessages.Text += "You have accepted the following quest: " + _player.CurrentLocation.QuestAvailableHere.Name + Environment.NewLine;
             foreach (PlayerQuest pq in _player.Quests)
             {
                 txtBoxMessages.Text += Environment.NewLine + "-" + pq.Details.Name;
             }
-            checkForQuests();
-            refreshQuestDataGrid();
+            CheckForQuests();
+            RefreshQuestDataGrid();
         }
 
-        private void refreshQuestDataGrid()
+        private void RefreshQuestDataGrid()
         {
             gridQuests.RowHeadersVisible = false;
             gridQuests.ColumnCount = 3;
@@ -161,9 +175,9 @@ namespace Adventure_RPG_Game
             }
         }
 
-        private List<Weapon> refreshWeaponComboBox()
+        private List<Weapon> RefreshWeaponComboBox()
         {
-            List<Weapon> weapons = new List<Weapon>();
+            List<Weapon> weapons = new();
             foreach (InventoryItem item in _player.Inventory)
             {
                 if (item.Details is Weapon)
@@ -177,7 +191,7 @@ namespace Adventure_RPG_Game
             return weapons;
         }
 
-        private void showWeaponsDropDown(List<Weapon> weapons)
+        private void ShowWeaponsDropDown(List<Weapon> weapons)
         {
             if (weapons.Count == 0)
             {
@@ -190,22 +204,22 @@ namespace Adventure_RPG_Game
                 cboWeapons.DisplayMember = "Name";
                 cboWeapons.ValueMember = "ID";
                 cboWeapons.SelectedIndex = 0;
-                showWeaponDamage(weapons[0]);
+                ShowWeaponDamage(weapons[0]);
             }
         }
 
-        private void showWeaponDamage(Weapon selectedWeapon)
+        private void ShowWeaponDamage(Weapon selectedWeapon)
         {
             labelWeaponDamage.Text = "Damage: " + selectedWeapon.MinimumDamage + "-" + selectedWeapon.MaximumDamage;
         }
 
         private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<Weapon> weapons = refreshWeaponComboBox();
-            showWeaponDamage(weapons[cboWeapons.SelectedIndex]);
+            List<Weapon> weapons = RefreshWeaponComboBox();
+            ShowWeaponDamage(weapons[cboWeapons.SelectedIndex]);
         }
 
-        private List<HealingPotion> refreshPotionComboBox()
+        private List<HealingPotion> RefreshPotionComboBox()
         {
             List<HealingPotion> healingPotions = new();
             foreach (InventoryItem item in _player.Inventory)
@@ -221,7 +235,7 @@ namespace Adventure_RPG_Game
             return healingPotions;
         }
 
-        private void showPotionsDropDown(List<HealingPotion> potions)
+        private void ShowPotionsDropDown(List<HealingPotion> potions)
         {
             if (potions.Count == 0)
             {
@@ -239,16 +253,16 @@ namespace Adventure_RPG_Game
                 cboPotions.DisplayMember = "Name";
                 cboPotions.ValueMember = "ID";
                 cboPotions.SelectedIndex = 0;
-                showPotionDetails(potions[0]);
+                ShowPotionDetails(potions[0]);
             }
         }
 
-        private void showHPHealed(HealingPotion selectedPotion)
+        private void ShowHPHealed(HealingPotion selectedPotion)
         {
             labelHealFor.Text = "Heal Amount: " + selectedPotion.AmountToHeal;
         }
 
-        private void showPotionQuantity (HealingPotion selectedPotion)
+        private void ShowPotionQuantity (HealingPotion selectedPotion)
         {
             foreach(InventoryItem item in _player.Inventory)
             {
@@ -260,31 +274,31 @@ namespace Adventure_RPG_Game
             }
         }
 
-        private void showPotionDetails(HealingPotion selectedPotion)
+        private void ShowPotionDetails(HealingPotion selectedPotion)
         {
-            showHPHealed(selectedPotion);
-            showPotionQuantity(selectedPotion);
+            ShowHPHealed(selectedPotion);
+            ShowPotionQuantity(selectedPotion);
         }
 
         private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<HealingPotion> potions = refreshPotionComboBox();
-            showPotionDetails(potions[cboPotions.SelectedIndex]);
+            List<HealingPotion> potions = RefreshPotionComboBox();
+            ShowPotionDetails(potions[cboPotions.SelectedIndex]);
         }
 
-        private HealingPotion getActivePotion()
+        private HealingPotion GetActivePotion()
         {
             return (HealingPotion)cboPotions.SelectedItem;
         }
 
         private void btnUsePotion_Click(object sender, EventArgs e)
         {
-            _player.usePotion(getActivePotion());
-            updatePlayerStats();
-            showPotionsDropDown(refreshPotionComboBox());
+            _player.UsePotion(GetActivePotion());
+            UpdatePlayerStats();
+            ShowPotionsDropDown(RefreshPotionComboBox());
         }
 
-        private void updatePlayerStats()
+        private void UpdatePlayerStats()
         {
             label_experience.Text = _player.ExperiencePoints.ToString();
             label_gold.Text = _player.Gold.ToString();
@@ -292,23 +306,33 @@ namespace Adventure_RPG_Game
             label_level.Text = _player.Level.ToString();
         }
 
-        private void doMove(Location _newLocation)
+        private void DoMove(Location _newLocation)
         {
-            if (_player.checkIfYouCanEnterLocation(_newLocation) == true)
+            if (_player.CheckIfYouCanEnterLocation(_newLocation) == true)
             {
                 _player.MoveTo(_newLocation);
-                checkIfThereIsLocation();
-                updateLocationTxtBox();
-                nameGoToBtns();
-                checkForQuests();
-                refreshWeaponComboBox();
-            } else
+                CheckIfThereIsLocation();
+                UpdateLocationTxtBox();
+                NameGoToBtns();
+                CheckForQuests();
+                RefreshWeaponComboBox();
+                SpawnMonster();
+                if (_currentMonster != null)
+                {
+                    LoadCombatButtons();
+                    LoadMonsterPanel();
+                    curState = CombatState.PlayerTurn;
+                    DisableMoveToButtons();
+                    DoCombatSequence();
+                }
+            }
+            else
             {
                 txtBoxMessages.Text +=  "You cannot enter " + _newLocation.Name + " just yet. You need the " + _newLocation.ItemRequiredToEnter.Name + " to enter." + Environment.NewLine;
             }
         }
 
-        private void loadInventory()
+        private void LoadInventory()
         {
             gridInventory.RowHeadersVisible = false;
             gridInventory.ColumnCount = 2;
@@ -328,9 +352,210 @@ namespace Adventure_RPG_Game
 
         }
 
-        private void spawnMonster()
+        private void SpawnMonster()
         {
-            
+            if (_player.CurrentLocation.MonsterLivingHere != null)
+            {
+                txtBoxMessages.Text += "You see a " + _player.CurrentLocation.MonsterLivingHere.Name + Environment.NewLine;
+                Monster _monsterLivingHere = ObjectMapper.ReturnMonsterByID(_player.CurrentLocation.MonsterLivingHere.ID);
+                _currentMonster = new(_monsterLivingHere.ID, _monsterLivingHere.CurrentHitPoints, _monsterLivingHere.MaximumHitPoints, _monsterLivingHere.Name,
+                   _monsterLivingHere.RewardExperience, _monsterLivingHere.RewardGold, _monsterLivingHere.MaximumDamage, _monsterLivingHere.MinimumDamage);
+                
+                foreach(LootItem item in _monsterLivingHere.LootTable)
+                {
+                    _currentMonster.LootTable.Add(item);
+                }
+
+                //enter combat
+
+
+            } else
+            {
+                _currentMonster = null;
+            }
         }
+
+        private void LoadMonsterPanel()
+        {
+            if (_currentMonster != null)
+            {
+                panel_Monster.Visible = true;
+                UpdateMonsterDetails();   
+            } else
+            {
+                panel_Monster.Visible = false;
+            }
+        }
+
+        private void UpdateMonsterDetails()
+        {
+            label_Monster_Name.Text = _currentMonster.Name.ToString();
+            label_Monster_HitPoints_Value.Text = _currentMonster.CurrentHitPoints + "/" + _currentMonster.MaximumHitPoints;
+            label_Monster_Damage_Values.Text = _currentMonster.MinimumDamage + "-" + _currentMonster.MaximumDamage;
+        }
+        
+
+        private void wait(int milliseconds)
+        {
+            var timer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start wait timer");
+            timer1.Interval = milliseconds;
+            timer1.Enabled = true;
+            timer1.Start();
+
+            timer1.Tick += (s, e) =>
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                // Console.WriteLine("stop wait timer");
+            };
+
+            while (timer1.Enabled)
+            {
+                Application.DoEvents();
+            }
+        }
+
+        private void DoCombatSequence()
+        {
+            switch (curState)
+            {
+                case CombatState.EnemyTurn:
+                    {
+                        btnUsePotion.Enabled = false;
+                        btnUseWeapon.Enabled = false;
+                        wait(1000);
+                        _currentMonster.Attack(_player);
+                        UpdatePlayerStats();
+                        curState = CombatState.PlayerTurn;
+                        DoCombatSequence();
+                        break;
+                    }
+                case CombatState.PlayerTurn:
+                    {
+                        btnUsePotion.Enabled = true;
+                        btnUseWeapon.Enabled = true;
+                        
+                        break;
+                    }
+                case CombatState.PlayerIsDead:
+                    {
+                        // game over
+                        break;
+                    }
+                case CombatState.EnemyIsDead:
+                    {
+                        EnableMoveToButtons();
+                        ReceiveGoldAndExperience();
+                        LootItems();
+                        _currentMonster = null;
+                        LoadMonsterPanel();
+                        LoadCombatButtons();
+                        break;
+                    }
+                case CombatState.EnemyIsLooted:
+                    {
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        private void DisableMoveToButtons()
+        {
+            btnGoEast.Enabled = false;
+            btnGoWest.Enabled = false;
+            btnGoSouth.Enabled = false;
+            btnGoNorth.Enabled = false;
+        }
+
+        private void EnableMoveToButtons()
+        {
+            btnGoEast.Enabled = true;
+            btnGoWest.Enabled = true;
+            btnGoSouth.Enabled = true;
+            btnGoNorth.Enabled = true;
+        }
+
+        private void LoadCombatButtons()
+        {
+                cboWeapons.Visible = _currentMonster != null;
+                cboPotions.Visible = _currentMonster != null;
+                btnUseWeapon.Visible = _currentMonster != null;
+                btnUsePotion.Visible = _currentMonster != null;
+           
+        }
+
+        private void PlayerAttack()
+        {
+            List<Weapon> weapons = RefreshWeaponComboBox();
+            _player.Attack(_currentMonster, weapons[cboWeapons.SelectedIndex]);
+            UpdateMonsterDetails();
+            if (_currentMonster.IsAlive())
+            {
+                curState = CombatState.EnemyTurn;
+            } else
+            {
+                curState = CombatState.EnemyIsDead;
+            }
+            DoCombatSequence();
+        }
+
+        private void btnUseWeapon_Click(object sender, EventArgs e)
+        {
+            PlayerAttack();
+        }
+
+        private void ReceiveGoldAndExperience()
+        {
+            txtBoxMessages.Text += Environment.NewLine;
+            txtBoxMessages.Text += "You defeated the " + _currentMonster.Name + "." + Environment.NewLine;
+            txtBoxMessages.Text += "You receive " + _currentMonster.RewardGold.ToString() + " Gold, " + _currentMonster.RewardExperience.ToString() + " Experience" + Environment.NewLine;
+            _player.Gold += _currentMonster.RewardGold;
+            _player.ExperiencePoints += _currentMonster.RewardExperience;
+            UpdatePlayerStats();
+        }
+
+        private void LootItems()
+        {
+                List<InventoryItem> lootedItems = new();
+                foreach(LootItem item in _currentMonster.LootTable)
+                {
+                    if (RandomNumberGenerator.GenerateNumber(1, 100) <= item.DropChance)
+                    {
+                        lootedItems.Add(new InventoryItem(item.Details, 1));
+                    }
+                }
+                if (lootedItems.Count == 0)
+                {
+                    foreach (LootItem item in _currentMonster.LootTable)
+                    {
+                        if (item.IsDefaultItem)
+                        {
+                            lootedItems.Add(new InventoryItem(item.Details, 1));
+                        }
+                    }
+
+                }
+                foreach(InventoryItem inventoryItem in lootedItems)
+                {
+                    _player.AddItemToInventory(inventoryItem.Details);
+                    if (inventoryItem.Quantity == 1)
+                   {
+                        txtBoxMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name;
+                    } else
+                    {
+                        txtBoxMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural;
+                    }
+                    txtBoxMessages.Text += Environment.NewLine;
+                }
+                LoadInventory();
+        }
+
     }
 }

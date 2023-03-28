@@ -26,5 +26,18 @@ namespace Engine
             MinimumDamage = _minDamage;
             LootTable = new List<LootItem>();
         }
+
+        public override void Attack(LivingCreature defender, Weapon equippedWeapon = null)
+        {
+                int damage = RandomNumberGenerator.GenerateNumber(MinimumDamage, MaximumDamage);
+                if (defender.CurrentHitPoints - damage <= 0)
+                {
+                    defender.CurrentHitPoints = 0;
+                }
+                else
+                {
+                    defender.CurrentHitPoints -= damage;
+                }
+            }
     }
 }

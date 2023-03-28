@@ -20,13 +20,13 @@ namespace Engine
             ExperiencePoints = _experiencePoints;
             Level = _level;
             Inventory = new List<InventoryItem>();
-            //InventoryItem _startingWeapon = new InventoryItem(ObjectMapper.ReturnItemByID(1), 1);
+            InventoryItem _startingWeapon = new (ObjectMapper.ReturnItemByID(1), 1);
             //InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
-            //InventoryItem _startingPotion1 = new InventoryItem(ObjectMapper.ReturnItemByID(10), 3);
+            InventoryItem _startingPotion1 = new (ObjectMapper.ReturnItemByID(10), 3);
             //InventoryItem _startingPotion2 = new InventoryItem(ObjectMapper.ReturnItemByID(13), 2);
-            //Inventory.Add(_startingWeapon);
+            Inventory.Add(_startingWeapon);
             //Inventory.Add(_startingWeapon2);
-            //Inventory.Add(_startingPotion1);
+            Inventory.Add(_startingPotion1);
             //Inventory.Add(_startingPotion2);
             InventoryItem _adventurerPass = new(ObjectMapper.ReturnItemByID(11), 1);
             Inventory.Add(_adventurerPass);
@@ -37,7 +37,7 @@ namespace Engine
             CurrentLocation = _newLocation;
         }
 
-        public bool checkIfYouCanEnterLocation (Location _newLocation)
+        public bool CheckIfYouCanEnterLocation (Location _newLocation)
         {
             if (_newLocation.ItemRequiredToEnter == null)
             {
@@ -55,7 +55,7 @@ namespace Engine
             }
         }
 
-        public bool checkIfThereIsQuest(Quest q)
+        public bool CheckIfThereIsQuest(Quest q)
         {
             bool isQuestHere = false;
             if (q != null)
@@ -64,7 +64,7 @@ namespace Engine
             }
             return isQuestHere;
         }
-        public bool checkIfThereIsQuestInLog(Quest q)
+        public bool CheckIfThereIsQuestInLog(Quest q)
         {
             bool isQuestHere = false;
             foreach (PlayerQuest pq in Quests)
@@ -77,26 +77,26 @@ namespace Engine
             }
             return isQuestHere;
         }
-        public void pickUpQuest(Quest q)
+        public void PickUpQuest(Quest q)
         {
-            if (checkIfThereIsQuest(q))
+            if (CheckIfThereIsQuest(q))
             {
-                if (!checkIfThereIsQuestInLog(q))
+                if (!CheckIfThereIsQuestInLog(q))
                 {
-                    PlayerQuest quest = new PlayerQuest(q);
+                    PlayerQuest quest = new (q);
                     Quests.Add(quest);
                 }
             }
         }
 
-        public void usePotion(HealingPotion potion)
+        public void UsePotion(HealingPotion potion)
         {
             foreach(InventoryItem item in Inventory.ToList())
             {
                 if (item.Details == potion)
                 {
                     item.Quantity--;
-                    healPlayer(potion.AmountToHeal);
+                    HealPlayer(potion.AmountToHeal);
                     if (item.Quantity == 0)
                     {
                         Inventory.Remove(item);
@@ -105,7 +105,7 @@ namespace Engine
             }
         }
 
-        public void healPlayer (int quantity)
+        public void HealPlayer (int quantity)
         {
             if (CurrentHitPoints + quantity >= MaximumHitPoints)
             {
@@ -116,8 +116,31 @@ namespace Engine
             }
         }
 
-        
+        public override void Attack(LivingCreature defender, Weapon equippedWeapon)
+        {
+            int damage = RandomNumberGenerator.GenerateNumber(equippedWeapon.MinimumDamage, equippedWeapon.MaximumDamage);
+            if (defender.CurrentHitPoints - damage <= 0)
+            {
+                defender.CurrentHitPoints = 0;
+            } else
+            {
+                defender.CurrentHitPoints -= damage;
+            }
+        }
 
+        public void AddItemToInventory(Item itemToAdd)
+        {
+            foreach(InventoryItem item in Inventory)
+            {
+                if (item.Details.ID == itemToAdd.ID)
+                {
+                    item.Quantity++;
+                    return;
+
+                }
+            }
+            Inventory.Add(new InventoryItem(itemToAdd, 1));
+        }
 
     }
 }
