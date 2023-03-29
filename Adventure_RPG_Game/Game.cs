@@ -6,22 +6,29 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 
 
 namespace Adventure_RPG_Game
 {
-    public enum CombatState { PlayerTurn, EnemyTurn, PlayerIsDead, EnemyIsDead, EnemyIsLooted };
+    public enum CombatState { PlayerTurn, EnemyTurn, PlayerIsDead, EnemyIsDead, EnemyIsLooted, NotInCombat };
     public partial class Game : Form
     {
         private Player _player;
         private Monster _currentMonster;
         private CombatState curState;
+
+        private delegate void SafeCallInitializeGame();
+        private BackgroundWorker _backgroundWorker1;
+
         public Game()
         {
             InitializeGame();
+            _backgroundWorker1 = new();
+            _backgroundWorker1.DoWork += new DoWorkEventHandler(BackgroundWorker1_DoWork);
+            _backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BackgroundWorker1_RunWorkerCompleted);
         }
 
         private void InitializeGame()
@@ -29,6 +36,8 @@ namespace Adventure_RPG_Game
             InitializeComponent();
             _player = new Player(20, 20, 0, 0, 1);
             _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
+
+            curState = CombatState.NotInCombat;
 
             UpdatePlayerStats();
             UpdateLocationTxtBox();
@@ -42,6 +51,21 @@ namespace Adventure_RPG_Game
             SpawnMonster();
             LoadMonsterPanel();
             LoadCombatButtons();
+            UpdateGameOverUI();
+
+        }
+
+        private void UpdateGameOverUI()
+        {
+            if (_player.IsAlive())
+            {
+               panel_Game_Over.Enabled = false;
+               panel_Game_Over.Visible = false;
+            } else
+            {
+                panel_Game_Over.Enabled = true;
+                panel_Game_Over.Visible = true;
+            }
 
         }
 
@@ -433,7 +457,15 @@ namespace Adventure_RPG_Game
                         int _damageDealt = _currentMonster.Attack(_player);
                         ShowDamageText(_currentMonster, _player, _damageDealt);
                         UpdatePlayerStats();
-                        curState = CombatState.PlayerTurn;
+                        if (_player.IsAlive())
+                        {
+                            curState = CombatState.PlayerTurn;
+                            
+                        }
+                        else
+                        {
+                            curState = CombatState.PlayerIsDead;
+                        }
                         DoCombatSequence();
                         break;
                     }
@@ -446,7 +478,7 @@ namespace Adventure_RPG_Game
                     }
                 case CombatState.PlayerIsDead:
                     {
-                        // game over
+                        GameOver(this);
                         break;
                     }
                 case CombatState.EnemyIsDead:
@@ -515,6 +547,16 @@ namespace Adventure_RPG_Game
             PlayerAttack(GetActiveWeapon());
         }
 
+        private void GameOver(Control parent)
+        {
+            
+            foreach (Control c in parent.Controls)
+            {
+                c.Visible = false;
+            }
+            UpdateGameOverUI();
+        }
+
         private void ShowDamageText(LivingCreature attacker, LivingCreature defender, int damageDealt)
         {
             if (attacker is Monster mA)
@@ -573,5 +615,26 @@ namespace Adventure_RPG_Game
                 LoadInventory();
         }
 
+        private void button_Try_Again_Click(object sender, EventArgs e)
+        {
+            _backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Thread.Sleep(500);
+        }
+
+        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Game Game2 = new Game();
+            Game2.Show();
+            this.Dispose(false);
+        }
+
+        private void button_No_Try_Again_Click(object sender, EventArgs e)
+        {
+            Application.ExitThread();
+        }
     }
 }

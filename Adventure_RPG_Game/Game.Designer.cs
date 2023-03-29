@@ -64,9 +64,15 @@ namespace Adventure_RPG_Game
             this.label_Monster_HitPoints_Value = new System.Windows.Forms.Label();
             this.label_Monster_HitPoints = new System.Windows.Forms.Label();
             this.label_Monster_Name = new System.Windows.Forms.Label();
+            this.label_Game_Over = new System.Windows.Forms.Label();
+            this.label_Try_Again = new System.Windows.Forms.Label();
+            this.button_Try_Again = new System.Windows.Forms.Button();
+            this.button_No_Try_Again = new System.Windows.Forms.Button();
+            this.panel_Game_Over = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.gridQuests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).BeginInit();
             this.panel_Monster.SuspendLayout();
+            this.panel_Game_Over.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -386,9 +392,9 @@ namespace Adventure_RPG_Game
             this.panel_Monster.Controls.Add(this.label_Monster_HitPoints_Value);
             this.panel_Monster.Controls.Add(this.label_Monster_HitPoints);
             this.panel_Monster.Controls.Add(this.label_Monster_Name);
-            this.panel_Monster.Location = new System.Drawing.Point(626, 75);
+            this.panel_Monster.Location = new System.Drawing.Point(626, 61);
             this.panel_Monster.Name = "panel_Monster";
-            this.panel_Monster.Size = new System.Drawing.Size(277, 166);
+            this.panel_Monster.Size = new System.Drawing.Size(230, 116);
             this.panel_Monster.TabIndex = 27;
             // 
             // label7
@@ -457,12 +463,67 @@ namespace Adventure_RPG_Game
             this.label_Monster_Name.TabIndex = 0;
             this.label_Monster_Name.Text = "label_Monster";
             // 
+            // label_Game_Over
+            // 
+            this.label_Game_Over.AutoSize = true;
+            this.label_Game_Over.Font = new System.Drawing.Font("Maiandra GD", 45F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_Game_Over.ForeColor = System.Drawing.Color.Red;
+            this.label_Game_Over.Location = new System.Drawing.Point(26, 21);
+            this.label_Game_Over.Name = "label_Game_Over";
+            this.label_Game_Over.Size = new System.Drawing.Size(344, 72);
+            this.label_Game_Over.TabIndex = 28;
+            this.label_Game_Over.Text = "Game Over";
+            this.label_Game_Over.UseMnemonic = false;
+            // 
+            // label_Try_Again
+            // 
+            this.label_Try_Again.AutoSize = true;
+            this.label_Try_Again.Font = new System.Drawing.Font("Maiandra GD", 27F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_Try_Again.ForeColor = System.Drawing.Color.Red;
+            this.label_Try_Again.Location = new System.Drawing.Point(92, 93);
+            this.label_Try_Again.Name = "label_Try_Again";
+            this.label_Try_Again.Size = new System.Drawing.Size(196, 43);
+            this.label_Try_Again.TabIndex = 29;
+            this.label_Try_Again.Text = "Try Again?";
+            // 
+            // button_Try_Again
+            // 
+            this.button_Try_Again.Location = new System.Drawing.Point(100, 151);
+            this.button_Try_Again.Name = "button_Try_Again";
+            this.button_Try_Again.Size = new System.Drawing.Size(75, 23);
+            this.button_Try_Again.TabIndex = 30;
+            this.button_Try_Again.Text = "Yes";
+            this.button_Try_Again.UseVisualStyleBackColor = true;
+            this.button_Try_Again.Click += new System.EventHandler(this.button_Try_Again_Click);
+            // 
+            // button_No_Try_Again
+            // 
+            this.button_No_Try_Again.Location = new System.Drawing.Point(221, 151);
+            this.button_No_Try_Again.Name = "button_No_Try_Again";
+            this.button_No_Try_Again.Size = new System.Drawing.Size(75, 23);
+            this.button_No_Try_Again.TabIndex = 31;
+            this.button_No_Try_Again.Text = "No";
+            this.button_No_Try_Again.UseVisualStyleBackColor = true;
+            this.button_No_Try_Again.Click += new System.EventHandler(this.button_No_Try_Again_Click);
+            // 
+            // panel_Game_Over
+            // 
+            this.panel_Game_Over.Controls.Add(this.label_Game_Over);
+            this.panel_Game_Over.Controls.Add(this.button_No_Try_Again);
+            this.panel_Game_Over.Controls.Add(this.label_Try_Again);
+            this.panel_Game_Over.Controls.Add(this.button_Try_Again);
+            this.panel_Game_Over.Location = new System.Drawing.Point(290, 183);
+            this.panel_Game_Over.Name = "panel_Game_Over";
+            this.panel_Game_Over.Size = new System.Drawing.Size(406, 185);
+            this.panel_Game_Over.TabIndex = 32;
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuText;
             this.ClientSize = new System.Drawing.Size(934, 613);
+            this.Controls.Add(this.panel_Game_Over);
             this.Controls.Add(this.panel_Monster);
             this.Controls.Add(this.labelHealFor);
             this.Controls.Add(this.labelQuantity);
@@ -498,6 +559,8 @@ namespace Adventure_RPG_Game
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).EndInit();
             this.panel_Monster.ResumeLayout(false);
             this.panel_Monster.PerformLayout();
+            this.panel_Game_Over.ResumeLayout(false);
+            this.panel_Game_Over.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -539,6 +602,11 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.Label label_Monster_Damage_Values;
         private System.Windows.Forms.Label label_Monster_Damage;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label_Game_Over;
+        private System.Windows.Forms.Label label_Try_Again;
+        private System.Windows.Forms.Button button_Try_Again;
+        private System.Windows.Forms.Button button_No_Try_Again;
+        private System.Windows.Forms.Panel panel_Game_Over;
     }
 }
 
