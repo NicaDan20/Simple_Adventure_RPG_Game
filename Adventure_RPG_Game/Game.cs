@@ -180,11 +180,11 @@ namespace Adventure_RPG_Game
             List<Weapon> weapons = new();
             foreach (InventoryItem item in _player.Inventory)
             {
-                if (item.Details is Weapon)
+                if (item.Details is Weapon weapon)
                 {
                     if (item.Quantity > 0)
                     {
-                        weapons.Add((Weapon)item.Details);
+                        weapons.Add(weapon);
                     }
                 }
             }
@@ -224,11 +224,11 @@ namespace Adventure_RPG_Game
             List<HealingPotion> healingPotions = new();
             foreach (InventoryItem item in _player.Inventory)
             {
-                if (item.Details is HealingPotion)
+                if (item.Details is HealingPotion potion)
                 {
                     if (item.Quantity > 0)
                     {
-                        healingPotions.Add((HealingPotion)item.Details);
+                        healingPotions.Add(potion);
                     }
                 }
             }
@@ -289,6 +289,11 @@ namespace Adventure_RPG_Game
         private HealingPotion GetActivePotion()
         {
             return (HealingPotion)cboPotions.SelectedItem;
+        }
+
+        private Weapon GetActiveWeapon()
+        {
+            return (Weapon)cboWeapons.SelectedItem;
         }
 
         private void btnUsePotion_Click(object sender, EventArgs e)
@@ -393,8 +398,6 @@ namespace Adventure_RPG_Game
             label_Monster_HitPoints_Value.Text = _currentMonster.CurrentHitPoints + "/" + _currentMonster.MaximumHitPoints;
             label_Monster_Damage_Values.Text = _currentMonster.MinimumDamage + "-" + _currentMonster.MaximumDamage;
         }
-        
-
         private void wait(int milliseconds)
         {
             var timer1 = new System.Windows.Forms.Timer();
@@ -427,7 +430,8 @@ namespace Adventure_RPG_Game
                         btnUsePotion.Enabled = false;
                         btnUseWeapon.Enabled = false;
                         wait(1000);
-                        _currentMonster.Attack(_player);
+                        int _damageDealt = _currentMonster.Attack(_player);
+                        ShowDamageText(_currentMonster, _player, _damageDealt);
                         UpdatePlayerStats();
                         curState = CombatState.PlayerTurn;
                         DoCombatSequence();
@@ -491,10 +495,10 @@ namespace Adventure_RPG_Game
            
         }
 
-        private void PlayerAttack()
+        private void PlayerAttack(Weapon _activeWeapon)
         {
-            List<Weapon> weapons = RefreshWeaponComboBox();
-            _player.Attack(_currentMonster, weapons[cboWeapons.SelectedIndex]);
+            int _damageDealt = _player.Attack(_currentMonster, _activeWeapon);
+            ShowDamageText(_player, _currentMonster, _damageDealt);
             UpdateMonsterDetails();
             if (_currentMonster.IsAlive())
             {
@@ -508,7 +512,19 @@ namespace Adventure_RPG_Game
 
         private void btnUseWeapon_Click(object sender, EventArgs e)
         {
-            PlayerAttack();
+            PlayerAttack(GetActiveWeapon());
+        }
+
+        private void ShowDamageText(LivingCreature attacker, LivingCreature defender, int damageDealt)
+        {
+            if (attacker is Monster mA)
+            {
+                txtBoxMessages.Text += mA.Name + " deals " + damageDealt.ToString() + " damage to you!" + Environment.NewLine;
+            }
+            if (defender is Monster mD)
+            {
+                txtBoxMessages.Text += "You deal " + damageDealt.ToString() + " damage to " + mD.Name + Environment.NewLine;
+            }
         }
 
         private void ReceiveGoldAndExperience()

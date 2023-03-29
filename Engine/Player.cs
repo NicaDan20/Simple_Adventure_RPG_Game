@@ -116,7 +116,7 @@ namespace Engine
             }
         }
 
-        public override void Attack(LivingCreature defender, Weapon equippedWeapon)
+        public override int Attack(LivingCreature defender, Weapon equippedWeapon)
         {
             int damage = RandomNumberGenerator.GenerateNumber(equippedWeapon.MinimumDamage, equippedWeapon.MaximumDamage);
             if (defender.CurrentHitPoints - damage <= 0)
@@ -126,6 +126,7 @@ namespace Engine
             {
                 defender.CurrentHitPoints -= damage;
             }
+            return damage;
         }
 
         public void AddItemToInventory(Item itemToAdd)

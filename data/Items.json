@@ -4,8 +4,8 @@
     "Name": "Rusty Sword",
     "NamePlural": "Rusty Swords",
     "Type": "WEAPON",
-    "MinimumDamage": "1",
-    "MaximumDamage": "3"
+    "MinimumDamage": "2",
+    "MaximumDamage": "4"
   },
   {
     "Id": 2,

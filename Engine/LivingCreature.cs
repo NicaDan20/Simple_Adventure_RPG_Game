@@ -17,7 +17,7 @@ namespace Engine
             MaximumHitPoints = _maxHitPoints;
         }
 
-        public virtual void Attack(LivingCreature defender, Weapon equippedWeapon = null) { }
+        public virtual int Attack(LivingCreature defender, Weapon equippedWeapon = null) { return 0; }
         public bool IsAlive()
         {
             if (CurrentHitPoints <= 0)

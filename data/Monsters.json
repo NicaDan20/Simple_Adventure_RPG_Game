@@ -4,8 +4,8 @@
     "Name": "Rat",
     "CurrentHitPoints": 10,
     "MaximumHitPoints": 10,
-    "MinimumDamage": 4,
-    "MaximumDamage": 7,
+    "MinimumDamage": 2,
+    "MaximumDamage": 4,
     "RewardExperience": 4,
     "RewardGold": 1,
     "LootTable": [
@@ -24,12 +24,12 @@
   {
     "ID": 2,
     "Name": "Cobra",
-    "CurrentHitPoints": 8,
-    "MaximumHitPoints": 8,
-    "MinimumDamage": 7,
-    "MaximumDamage": 10,
-    "RewardExperience": 5,
-    "RewardGold": 1,
+    "CurrentHitPoints": 11,
+    "MaximumHitPoints": 11,
+    "MinimumDamage": 4,
+    "MaximumDamage": 8,
+    "RewardExperience": 7,
+    "RewardGold": 3,
     "LootTable": [
       {
         "ItemId": 4,
@@ -46,12 +46,12 @@
   {
     "ID": 3,
     "Name": "Giant Spider",
-    "CurrentHitPoints": 15,
-    "MaximumHitPoints": 15,
-    "MinimumDamage": 6,
-    "MaximumDamage": 8,
-    "RewardExperience": 7,
-    "RewardGold": 2,
+    "CurrentHitPoints": 25,
+    "MaximumHitPoints": 25,
+    "MinimumDamage": 10,
+    "MaximumDamage": 12,
+    "RewardExperience": 20,
+    "RewardGold": 15,
     "LootTable": [
       {
         "ItemId": 5,
@@ -65,10 +65,10 @@
     "Name": "Bear",
     "CurrentHitPoints": 20,
     "MaximumHitPoints": 20,
-    "MinimumDamage": 10,
-    "MaximumDamage": 14,
-    "RewardExperience": 10,
-    "RewardGold": 5,
+    "MinimumDamage": 9,
+    "MaximumDamage": 12,
+    "RewardExperience": 15,
+    "RewardGold": 8,
     "LootTable": [
       {
         "ItemId": 12,
@@ -90,12 +90,12 @@
   {
     "ID": 4,
     "Name": "Bandit",
-    "CurrentHitPoints": 15,
-    "MaximumHitPoints": 15,
-    "MinimumDamage": 9,
-    "MaximumDamage": 11,
-    "RewardExperience": 8,
-    "RewardGold": 10,
+    "CurrentHitPoints": 12,
+    "MaximumHitPoints": 12,
+    "MinimumDamage": 7,
+    "MaximumDamage": 10,
+    "RewardExperience": 10,
+    "RewardGold": 15,
     "LootTable": [
       {
         "ItemId": 9,
