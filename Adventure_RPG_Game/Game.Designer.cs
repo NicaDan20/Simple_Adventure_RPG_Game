@@ -344,6 +344,7 @@ namespace Adventure_RPG_Game
             this.btnTurnInQuest.TabIndex = 22;
             this.btnTurnInQuest.Text = "Turn In Quest";
             this.btnTurnInQuest.UseVisualStyleBackColor = true;
+            this.btnTurnInQuest.Click += new System.EventHandler(this.btnTurnInQuest_Click);
             // 
             // label6
             // 

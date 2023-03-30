@@ -10,6 +10,7 @@ namespace Engine
     {
         public int Gold { get; set; }
         public int ExperiencePoints { get; set; }
+        public int ExpToNextLevel { get; set; }
         public int Level { get; set; }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
@@ -31,6 +32,7 @@ namespace Engine
             InventoryItem _adventurerPass = new(ObjectMapper.ReturnItemByID(11), 1);
             Inventory.Add(_adventurerPass);
             Quests = new List<PlayerQuest>();
+            SetExpToNextLevel();
         }
         public void MoveTo(Location _newLocation)
         {
@@ -42,17 +44,8 @@ namespace Engine
             if (_newLocation.ItemRequiredToEnter == null)
             {
                 return true;
-            } else
-            {
-                foreach (InventoryItem item in Inventory)
-                {
-                    if (item.Details == _newLocation.ItemRequiredToEnter)
-                    {
-                        return true;
-                    }
-                }
-                return false;
             }
+            return Inventory.Exists(item => item.Details.ID == _newLocation.ItemRequiredToEnterID);
         }
 
         public bool CheckIfThereIsQuest(Quest q)
@@ -66,16 +59,7 @@ namespace Engine
         }
         public bool CheckIfThereIsQuestInLog(Quest q)
         {
-            bool isQuestHere = false;
-            foreach (PlayerQuest pq in Quests)
-            {
-                if (pq.Details == q)
-                {
-                    isQuestHere = true;
-                    break;
-                }
-            }
-            return isQuestHere;
+            return Quests.Exists(pq => pq.Details.ID == q.ID);
         }
         public void PickUpQuest(Quest q)
         {
@@ -97,11 +81,16 @@ namespace Engine
                 {
                     item.Quantity--;
                     HealPlayer(potion.AmountToHeal);
-                    if (item.Quantity == 0)
-                    {
-                        Inventory.Remove(item);
-                    }
+                    RemoveFromInventory(item);
                 }
+            }
+        }
+
+        private void RemoveFromInventory(InventoryItem item)
+        {
+            if (item.Quantity == 0)
+            {
+                Inventory.Remove(item);
             }
         }
 
@@ -129,18 +118,108 @@ namespace Engine
             return damage;
         }
 
-        public void AddItemToInventory(Item itemToAdd)
+        public void AddItemToInventory(Item itemToAdd, int quantity)
         {
             foreach(InventoryItem item in Inventory)
             {
                 if (item.Details.ID == itemToAdd.ID)
                 {
-                    item.Quantity++;
+                    item.Quantity += quantity;
                     return;
 
                 }
             }
-            Inventory.Add(new InventoryItem(itemToAdd, 1));
+            Inventory.Add(new InventoryItem(itemToAdd, quantity));
+        }
+
+        private void SetExpToNextLevel()
+        {
+            ExpToNextLevel = (5 * Level + 5) / 2;
+        }
+
+        public bool LevelUp()
+        {
+            if (ExperiencePoints >= ExpToNextLevel)
+            {
+                Level++;
+                MaximumHitPoints += 8;
+                CurrentHitPoints = MaximumHitPoints;
+                ExperiencePoints = 0;
+                SetExpToNextLevel();
+                return true;
+            }
+            return false;
+        }
+
+        private bool HasQuestCompletionItems(Quest q)
+        {
+
+            var itemsExistQuery = from qci in q.QuestCompletionItems
+                                  join item in Inventory
+                                  on qci.Details.ID equals item.Details.ID
+                                  where qci.Quantity <= item.Quantity
+                                  select item;
+           if (!itemsExistQuery.Any())
+           {
+                return false;
+           }
+           return true;
+            
+        }
+
+        private void RemoveQuestCompletionItems(Quest q)
+        {                        
+            foreach (QuestCompletionItem qci in q.QuestCompletionItems)
+            {
+
+                foreach (InventoryItem item in Inventory)
+                {
+                    if (item.Details.ID == qci.Details.ID)
+                    {
+                        item.Quantity -= qci.Quantity;
+                        RemoveFromInventory(item);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public bool CheckIfQuestIsCompleted(Quest q)
+        {
+            return Quests.Exists(pq => pq.Details.ID == q.ID && pq.IsCompleted == true);
+        }
+
+        public bool CompleteQuest(Quest q)
+        {
+            if (!CheckIfQuestIsCompleted(q))
+            {
+                if (HasQuestCompletionItems(q))
+                {
+                    AddItemToInventory(q.RewardItem, 1);
+                    Gold += q.RewardGold;
+                    GainExperience(q.RewardExperience);
+                    RemoveQuestCompletionItems(q);
+                    Quests = Quests.Where(pq => q.ID == pq.Details.ID).Select(pq =>
+                    {
+                        pq.IsCompleted = true;
+                        return pq;
+
+                    }).ToList();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void GainExperience(int experience)
+        {
+            ExperiencePoints += experience;
+            LevelUp();
+        }
+
+        public int ReturnQuantity (Item item)
+        {
+            return Inventory.Where(it => it.Details.ID == item.ID).Select(it => it.Quantity).FirstOrDefault();
         }
 
     }

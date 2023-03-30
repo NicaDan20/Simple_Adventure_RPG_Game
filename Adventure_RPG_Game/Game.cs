@@ -20,7 +20,6 @@ namespace Adventure_RPG_Game
         private Monster _currentMonster;
         private CombatState curState;
 
-        private delegate void SafeCallInitializeGame();
         private BackgroundWorker _backgroundWorker1;
 
         public Game()
@@ -160,24 +159,33 @@ namespace Adventure_RPG_Game
                 if (_player.CheckIfThereIsQuestInLog(_player.CurrentLocation.QuestAvailableHere))
                 {
                     btnPickUpQuest.Visible = false;
-                } else
+                    btnTurnInQuest.Visible = true;
+                    if (_player.CheckIfQuestIsCompleted(_player.CurrentLocation.QuestAvailableHere))
+                    {
+                        btnTurnInQuest.Visible = false;
+                    }
+                }
+                else
                 {
                     btnPickUpQuest.Visible = true;
+                    btnTurnInQuest.Visible = false;
                 }
             } else
             {
                 btnPickUpQuest.Visible = false;
+                btnTurnInQuest.Visible = false;
             }
         }
 
         private void btnPickUpQuest_Click(object sender, EventArgs e)
         {
             _player.PickUpQuest(_player.CurrentLocation.QuestAvailableHere);
-            txtBoxMessages.Text += "You have accepted the following quest: " + _player.CurrentLocation.QuestAvailableHere.Name + Environment.NewLine;
+            txtBoxMessages.Text += "You have accepted the following quest: " + _player.CurrentLocation.QuestAvailableHere.Name + "." + Environment.NewLine;
             foreach (PlayerQuest pq in _player.Quests)
             {
                 txtBoxMessages.Text += Environment.NewLine + "-" + pq.Details.Name;
             }
+            txtBoxMessages.Text += Environment.NewLine;
             CheckForQuests();
             RefreshQuestDataGrid();
         }
@@ -287,14 +295,24 @@ namespace Adventure_RPG_Game
         }
 
         private void ShowPotionQuantity (HealingPotion selectedPotion)
+        {  
+            labelQuantity.Text = "Potions left: " + _player.ReturnQuantity(selectedPotion).ToString();
+        }
+        private void CompleteQuest(Quest q)
         {
-            foreach(InventoryItem item in _player.Inventory)
+            if (_player.CompleteQuest(q))
             {
-                if (item.Details == selectedPotion)
-                {
-                    labelQuantity.Text = "Potions left: " + item.Quantity.ToString();
-                    break;
-                }
+                txtBoxMessages.Text += Environment.NewLine + "You have completed the following quest: " + q.Name + "." + Environment.NewLine + "You receive " + q.RewardExperience + " Experience " + q.RewardGold + " Gold " + " and the following item: " + q.RewardItem.Name + "."  + Environment.NewLine;
+                LoadInventory();
+                UpdatePlayerStats();
+                RefreshQuestDataGrid();
+                CheckForQuests();
+                ScrollToBottomOfMessages();
+            }
+            else
+            {
+                txtBoxMessages.Text += "You cannot turn in this quest yet. You do not have the required items." + Environment.NewLine;
+                ScrollToBottomOfMessages();
             }
         }
 
@@ -322,9 +340,7 @@ namespace Adventure_RPG_Game
 
         private void btnUsePotion_Click(object sender, EventArgs e)
         {
-            _player.UsePotion(GetActivePotion());
-            UpdatePlayerStats();
-            ShowPotionsDropDown(RefreshPotionComboBox());
+            PlayerHeal(GetActivePotion());
         }
 
         private void UpdatePlayerStats()
@@ -389,8 +405,9 @@ namespace Adventure_RPG_Game
                 Monster _monsterLivingHere = ObjectMapper.ReturnMonsterByID(_player.CurrentLocation.MonsterLivingHere.ID);
                 _currentMonster = new(_monsterLivingHere.ID, _monsterLivingHere.CurrentHitPoints, _monsterLivingHere.MaximumHitPoints, _monsterLivingHere.Name,
                    _monsterLivingHere.RewardExperience, _monsterLivingHere.RewardGold, _monsterLivingHere.MaximumDamage, _monsterLivingHere.MinimumDamage);
-                
-                foreach(LootItem item in _monsterLivingHere.LootTable)
+                ScrollToBottomOfMessages();
+
+                foreach (LootItem item in _monsterLivingHere.LootTable)
                 {
                     _currentMonster.LootTable.Add(item);
                 }
@@ -489,6 +506,7 @@ namespace Adventure_RPG_Game
                         _currentMonster = null;
                         LoadMonsterPanel();
                         LoadCombatButtons();
+                        LevelUp();
                         break;
                     }
                 case CombatState.EnemyIsLooted:
@@ -499,6 +517,16 @@ namespace Adventure_RPG_Game
                     {
                         break;
                     }
+            }
+        }
+
+        private void LevelUp()
+        {
+            if (_player.LevelUp())
+            {
+                txtBoxMessages.Text += "You have levelled up! You gain 8 HP!" + Environment.NewLine;
+                ScrollToBottomOfMessages();
+                UpdatePlayerStats();
             }
         }
 
@@ -524,7 +552,6 @@ namespace Adventure_RPG_Game
                 cboPotions.Visible = _currentMonster != null;
                 btnUseWeapon.Visible = _currentMonster != null;
                 btnUsePotion.Visible = _currentMonster != null;
-           
         }
 
         private void PlayerAttack(Weapon _activeWeapon)
@@ -540,6 +567,29 @@ namespace Adventure_RPG_Game
                 curState = CombatState.EnemyIsDead;
             }
             DoCombatSequence();
+        }
+
+        private void PlayerHeal(HealingPotion _activePotion)
+        {
+            int _amountHealed = _activePotion.AmountToHeal;
+            _player.UsePotion(_activePotion);
+            UpdatePlayerStats();
+            ShowAmountHealedMessage(_amountHealed);
+            ShowPotionsDropDown(RefreshPotionComboBox());
+            if (_currentMonster.IsAlive())
+            {
+                curState = CombatState.EnemyTurn;
+            } else
+            {
+                curState = CombatState.EnemyIsDead;
+            }
+            DoCombatSequence();
+        }
+
+        private void ShowAmountHealedMessage(int _amountHealed)
+        {
+            txtBoxMessages.Text += "You drank a healing potion, restoring " + _amountHealed + " Hit Points." + Environment.NewLine;
+            ScrollToBottomOfMessages();
         }
 
         private void btnUseWeapon_Click(object sender, EventArgs e)
@@ -567,6 +617,7 @@ namespace Adventure_RPG_Game
             {
                 txtBoxMessages.Text += "You deal " + damageDealt.ToString() + " damage to " + mD.Name + Environment.NewLine;
             }
+            ScrollToBottomOfMessages();
         }
 
         private void ReceiveGoldAndExperience()
@@ -577,6 +628,7 @@ namespace Adventure_RPG_Game
             _player.Gold += _currentMonster.RewardGold;
             _player.ExperiencePoints += _currentMonster.RewardExperience;
             UpdatePlayerStats();
+            ScrollToBottomOfMessages();
         }
 
         private void LootItems()
@@ -602,7 +654,7 @@ namespace Adventure_RPG_Game
                 }
                 foreach(InventoryItem inventoryItem in lootedItems)
                 {
-                    _player.AddItemToInventory(inventoryItem.Details);
+                    _player.AddItemToInventory(inventoryItem.Details, 1);
                     if (inventoryItem.Quantity == 1)
                    {
                         txtBoxMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name;
@@ -611,8 +663,9 @@ namespace Adventure_RPG_Game
                         txtBoxMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural;
                     }
                     txtBoxMessages.Text += Environment.NewLine;
-                }
-                LoadInventory();
+                    ScrollToBottomOfMessages();
+            }
+            LoadInventory();
         }
 
         private void button_Try_Again_Click(object sender, EventArgs e)
@@ -636,5 +689,17 @@ namespace Adventure_RPG_Game
         {
             Application.ExitThread();
         }
+
+        private void btnTurnInQuest_Click(object sender, EventArgs e)
+        {
+            CompleteQuest(_player.CurrentLocation.QuestAvailableHere);
+        }
+
+        private void ScrollToBottomOfMessages()
+        {
+            txtBoxMessages.SelectionStart = txtBoxMessages.Text.Length;
+            txtBoxMessages.ScrollToCaret();
+        }
+
     }
 }
