@@ -10,6 +10,7 @@ using System.Diagnostics;
 
 namespace Engine
 {
+    // Static world class, this holds all the information about monsters, items, quests and locations
     public static class World
     {
         public static readonly List<Item> Items = new();
@@ -23,9 +24,9 @@ namespace Engine
             Quests = PopulateQuests();
             Locations = PopulateLocations();
         }
+        // Items are loaded from a json file
         public static List<Item> PopulateItems()
         {
-            System.Console.WriteLine("Hi");
             using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Items.json"))
             {
                 try
@@ -40,7 +41,7 @@ namespace Engine
                 }
             }
         }
-
+        // Monsters are loaded from a json file
         public static List<Monster> PopulateMonsters()
         {
             using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Monsters.json"))
@@ -65,7 +66,7 @@ namespace Engine
                 }
             }
         }
-
+        // Quests are loaded from a json file
        public static List<Quest> PopulateQuests()
         {
             using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Quests.json"))
@@ -91,7 +92,7 @@ namespace Engine
                 }
             }
         }
-
+        // Locations are loaded from a json file
         public static List<Location> PopulateLocations()
         {
             using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Locations.json"))

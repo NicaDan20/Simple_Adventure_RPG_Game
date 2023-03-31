@@ -805,7 +805,8 @@ namespace Adventure_RPG_Game
         {
             CompleteQuest(_player.CurrentLocation.QuestAvailableHere);
         }
-
+        
+        // Whenever a new message is sent in the txtBoxMessages, we update the scroll to always be updated
         private void ScrollToBottomOfMessages()
         {
             txtBoxMessages.SelectionStart = txtBoxMessages.Text.Length;
@@ -814,20 +815,28 @@ namespace Adventure_RPG_Game
 
         private void btn_SaveGame_Click(object sender, EventArgs e)
         {
+            // Serlializes the player
             File.WriteAllText(PLAYER_DATA_FILE_NAME, SaveGame.ToXMLString(_player, _currentMonster));
         }
 
+        // Load game function
         private void btn_LoadGame_Click(object sender, EventArgs e)
         {
+            // We load the player from the XML file
             _player = Player.CreatePlayerFromXMLString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
             if (_player._curState != CombatState.NotInCombat)
             {
+                // if the player's loaded state indicates that the player might be in combat
+                // we load the monster he was fighting with, and initialize the ui
                 _currentMonster = Monster.GetMonsterFromXML(File.ReadAllText(PLAYER_DATA_FILE_NAME));
                 InitializeUI();
+                // and resume the combat sequence function
                 DoCombatSequence();
             }
             else
             {
+                // if the player's current state is Not in Combat, it means the player is not in combat... and we Initialize the UI as
+                // normal
                 InitializeUI();
             }
         }

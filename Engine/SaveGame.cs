@@ -10,6 +10,34 @@ namespace Engine
      
     public class SaveGame
     {
+        /* Here we create the XML string responsible for the player class
+            This is how the XML should look like
+            <Player>
+                <Stats>
+                    <CurrentHitPoints> VALUE </CurrentHitPoints>
+                    <MaximumHitPoints> VALUE </MaximumHitPoints>
+                    <Gold> VALUE </Gold>
+                    <ExperiencePoints> VALUE </ExperiencePoints>
+                    <Level> VALUE </Level>
+                    <CurrentLocation> Location_ID </CurrentLocation>
+                </Stats>
+            <InventoryItems>
+                <InventoryItem ID=InventoryItem_ID Quantity=Quantity  />
+                ...
+                ...
+            </InventoryItems>
+            <PlayerQuests>
+                <PlayerQuest ID=PlayerQuest_ID IsCompleted=VALUE  />
+            </PlayerQuests>
+            <PlayerCombatState>CombatState</PlayerCombatState>
+            
+            OPTIONAL, ONLY IF MONSTER IS NOT NULL
+            <Monster  ID=Monster_ID CurrentHitPoints=VALUE MaximumHitPoints=VALUE   />
+            OPTIONAL, ONLY IF MONSTER IS NOT NULL
+
+            </Player>
+        
+        */
         public static string ToXMLString(Player _player, Monster _monster = null)
         {
             XmlDocument playerData = new XmlDocument();

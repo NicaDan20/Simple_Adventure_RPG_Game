@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    // ObjectMapper class returns items, monsters, quests or locations based on their ID
     public static class ObjectMapper
     {
         public static Item ReturnItemByID(int _itemId)

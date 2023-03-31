@@ -27,7 +27,7 @@ namespace Engine
             MinimumDamage = _minDamage;
             LootTable = new List<LootItem>();
         }
-
+        // Monster attack function
         public override int Attack(LivingCreature defender, Weapon equippedWeapon = null)
         {
                 int damage = RandomNumberGenerator.GenerateNumber(MinimumDamage, MaximumDamage);
@@ -41,7 +41,9 @@ namespace Engine
                 }
             return damage;
         }
-
+        // If the player is in combat at the moment of saving the game
+        // when the player loads the game, we will load the monster
+        // from the XML file
         public static Monster GetMonsterFromXML(string _xmlPlayerData)
         {
             try
