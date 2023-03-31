@@ -17,6 +17,12 @@ namespace Engine
             MaximumHitPoints = _maxHitPoints;
         }
 
+        public LivingCreature(LivingCreature _creature)
+        {
+            CurrentHitPoints = _creature.CurrentHitPoints;
+            MaximumHitPoints = _creature.MaximumHitPoints;
+        }
+
         public virtual int Attack(LivingCreature defender, Weapon equippedWeapon = null) { return 0; }
         public bool IsAlive()
         {

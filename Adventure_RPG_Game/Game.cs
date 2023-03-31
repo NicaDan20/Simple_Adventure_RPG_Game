@@ -9,17 +9,15 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
-
+using System.IO;
 
 namespace Adventure_RPG_Game
 {
-    public enum CombatState { PlayerTurn, EnemyTurn, PlayerIsDead, EnemyIsDead, EnemyIsLooted, NotInCombat };
     public partial class Game : Form
     {
         private Player _player;
         private Monster _currentMonster;
-        private CombatState curState;
-
+        private const string PLAYER_DATA_FILE_NAME = "SaveGame.xml";
         private BackgroundWorker _backgroundWorker1;
 
         public Game()
@@ -33,11 +31,13 @@ namespace Adventure_RPG_Game
         private void InitializeGame()
         {
             InitializeComponent();
-            _player = new Player(20, 20, 0, 0, 1);
-            _player.MoveTo(ObjectMapper.ReturnLocationByID(1));
+            _player = Player.CreateDefaultPlayer(); 
+            InitializeUI();
 
-            curState = CombatState.NotInCombat;
+        }
 
+        private void InitializeUI()
+        {
             UpdatePlayerStats();
             UpdateLocationTxtBox();
             CheckIfThereIsLocation();
@@ -47,11 +47,9 @@ namespace Adventure_RPG_Game
             ShowWeaponsDropDown(RefreshWeaponComboBox());
             ShowPotionsDropDown(RefreshPotionComboBox());
             LoadInventory();
-            SpawnMonster();
             LoadMonsterPanel();
             LoadCombatButtons();
             UpdateGameOverUI();
-
         }
 
         private void UpdateGameOverUI()
@@ -366,7 +364,7 @@ namespace Adventure_RPG_Game
                 {
                     LoadCombatButtons();
                     LoadMonsterPanel();
-                    curState = CombatState.PlayerTurn;
+                    _player._curState = CombatState.PlayerTurn;
                     DisableMoveToButtons();
                     DoCombatSequence();
                 }
@@ -464,7 +462,7 @@ namespace Adventure_RPG_Game
 
         private void DoCombatSequence()
         {
-            switch (curState)
+            switch (_player._curState)
             {
                 case CombatState.EnemyTurn:
                     {
@@ -476,12 +474,12 @@ namespace Adventure_RPG_Game
                         UpdatePlayerStats();
                         if (_player.IsAlive())
                         {
-                            curState = CombatState.PlayerTurn;
+                            _player._curState = CombatState.PlayerTurn;
                             
                         }
                         else
                         {
-                            curState = CombatState.PlayerIsDead;
+                            _player._curState = CombatState.PlayerIsDead;
                         }
                         DoCombatSequence();
                         break;
@@ -561,10 +559,10 @@ namespace Adventure_RPG_Game
             UpdateMonsterDetails();
             if (_currentMonster.IsAlive())
             {
-                curState = CombatState.EnemyTurn;
+                _player._curState = CombatState.EnemyTurn;
             } else
             {
-                curState = CombatState.EnemyIsDead;
+                _player._curState = CombatState.EnemyIsDead;
             }
             DoCombatSequence();
         }
@@ -578,10 +576,10 @@ namespace Adventure_RPG_Game
             ShowPotionsDropDown(RefreshPotionComboBox());
             if (_currentMonster.IsAlive())
             {
-                curState = CombatState.EnemyTurn;
+                _player._curState = CombatState.EnemyTurn;
             } else
             {
-                curState = CombatState.EnemyIsDead;
+                _player._curState = CombatState.EnemyIsDead;
             }
             DoCombatSequence();
         }
@@ -701,5 +699,24 @@ namespace Adventure_RPG_Game
             txtBoxMessages.ScrollToCaret();
         }
 
+        private void btn_SaveGame_Click(object sender, EventArgs e)
+        {
+            File.WriteAllText(PLAYER_DATA_FILE_NAME, SaveGame.ToXMLString(_player, _currentMonster));
+        }
+
+        private void btn_LoadGame_Click(object sender, EventArgs e)
+        {
+            _player = Player.CreatePlayerFromXMLString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
+            if (_player._curState != CombatState.NotInCombat)
+            {
+                _currentMonster = Monster.GetMonsterFromXML(File.ReadAllText(PLAYER_DATA_FILE_NAME));
+                InitializeUI();
+                DoCombatSequence();
+            }
+            else
+            {
+                InitializeUI();
+            }
+        }
     }
 }

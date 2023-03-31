@@ -29,7 +29,7 @@ namespace Adventure_RPG_Game
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -69,6 +69,8 @@ namespace Adventure_RPG_Game
             this.button_Try_Again = new System.Windows.Forms.Button();
             this.button_No_Try_Again = new System.Windows.Forms.Button();
             this.panel_Game_Over = new System.Windows.Forms.Panel();
+            this.btn_SaveGame = new System.Windows.Forms.Button();
+            this.btn_LoadGame = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridQuests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridInventory)).BeginInit();
             this.panel_Monster.SuspendLayout();
@@ -299,8 +301,8 @@ namespace Adventure_RPG_Game
             this.gridQuests.Name = "gridQuests";
             this.gridQuests.ReadOnly = true;
             this.gridQuests.RowHeadersVisible = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.gridQuests.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            this.gridQuests.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.gridQuests.RowTemplate.Height = 25;
             this.gridQuests.RowTemplate.ReadOnly = true;
             this.gridQuests.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
@@ -518,12 +520,34 @@ namespace Adventure_RPG_Game
             this.panel_Game_Over.Size = new System.Drawing.Size(406, 185);
             this.panel_Game_Over.TabIndex = 32;
             // 
+            // btn_SaveGame
+            // 
+            this.btn_SaveGame.Location = new System.Drawing.Point(750, 10);
+            this.btn_SaveGame.Name = "btn_SaveGame";
+            this.btn_SaveGame.Size = new System.Drawing.Size(75, 23);
+            this.btn_SaveGame.TabIndex = 33;
+            this.btn_SaveGame.Text = "Save Game";
+            this.btn_SaveGame.UseVisualStyleBackColor = true;
+            this.btn_SaveGame.Click += new System.EventHandler(this.btn_SaveGame_Click);
+            // 
+            // btn_LoadGame
+            // 
+            this.btn_LoadGame.Location = new System.Drawing.Point(831, 10);
+            this.btn_LoadGame.Name = "btn_LoadGame";
+            this.btn_LoadGame.Size = new System.Drawing.Size(75, 23);
+            this.btn_LoadGame.TabIndex = 34;
+            this.btn_LoadGame.Text = "Load Game";
+            this.btn_LoadGame.UseVisualStyleBackColor = true;
+            this.btn_LoadGame.Click += new System.EventHandler(this.btn_LoadGame_Click);
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuText;
             this.ClientSize = new System.Drawing.Size(934, 613);
+            this.Controls.Add(this.btn_LoadGame);
+            this.Controls.Add(this.btn_SaveGame);
             this.Controls.Add(this.panel_Game_Over);
             this.Controls.Add(this.panel_Monster);
             this.Controls.Add(this.labelHealFor);
@@ -608,6 +632,8 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.Button button_Try_Again;
         private System.Windows.Forms.Button button_No_Try_Again;
         private System.Windows.Forms.Panel panel_Game_Over;
+        private System.Windows.Forms.Button btn_SaveGame;
+        private System.Windows.Forms.Button btn_LoadGame;
     }
 }
 

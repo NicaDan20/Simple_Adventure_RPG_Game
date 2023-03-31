@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Engine
 {
@@ -39,6 +40,31 @@ namespace Engine
                     defender.CurrentHitPoints -= damage;
                 }
             return damage;
+        }
+
+        public static Monster GetMonsterFromXML(string _xmlPlayerData)
+        {
+            try
+            {
+                XmlDocument playerData = new();
+                playerData.LoadXml(_xmlPlayerData);
+                XmlNode node = playerData.SelectSingleNode("/Player/Monster");
+                int id = Convert.ToInt32(node.Attributes["ID"].Value);
+                int currentHitPoints = Convert.ToInt32(node.Attributes["CurrentHitPoints"].Value);
+                int maximumHitPoints = Convert.ToInt32(node.Attributes["MaximumHitPoints"].Value);
+
+                Monster monster = (ObjectMapper.ReturnMonsterByID(id));
+                Monster _loadedMonster = new Monster(monster.ID, monster.CurrentHitPoints, monster.MaximumHitPoints, monster.Name, monster.RewardExperience, monster.RewardGold, monster.MaximumDamage, monster.MinimumDamage);
+                _loadedMonster.CurrentHitPoints = currentHitPoints;
+                _loadedMonster.MaximumHitPoints = maximumHitPoints;
+
+                return _loadedMonster;
+            } catch
+            {
+                return null;
             }
+        }
+
+
     }
 }

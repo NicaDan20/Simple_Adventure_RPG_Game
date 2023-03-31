@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Engine
 {
+    public enum CombatState { 
+        [XmlEnum("PlayerTurn")]
+        PlayerTurn, 
+        [XmlEnum("EnemyTurn")]
+        EnemyTurn,
+        [XmlEnum("PlayerIsDead")]
+        PlayerIsDead, 
+        [XmlEnum("EnemyIsDead")]
+        EnemyIsDead, 
+        [XmlEnum("EnemyIsLooted")]
+        EnemyIsLooted, 
+        [XmlEnum("NotInCombat")]
+        NotInCombat
+    };
     public class Player : LivingCreature
     {
+        public CombatState _curState;
         public int Gold { get; set; }
         public int ExperiencePoints { get; set; }
         public int ExpToNextLevel { get; set; }
@@ -15,25 +32,69 @@ namespace Engine
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
         public Location CurrentLocation { get; set; }
-        public Player(int _currentHitPoints, int _maxHitPoints, int _gold, int _experiencePoints, int _level) : base(_currentHitPoints, _maxHitPoints)
+        private Player(int _currentHitPoints, int _maxHitPoints, int _gold, int _experiencePoints, int _level) : base(_currentHitPoints, _maxHitPoints)
         {
             Gold = _gold;
             ExperiencePoints = _experiencePoints;
             Level = _level;
             Inventory = new List<InventoryItem>();
-            InventoryItem _startingWeapon = new (ObjectMapper.ReturnItemByID(1), 1);
-            //InventoryItem _startingWeapon2 = new InventoryItem(ObjectMapper.ReturnItemByID(6), 1);
-            InventoryItem _startingPotion1 = new (ObjectMapper.ReturnItemByID(10), 3);
-            //InventoryItem _startingPotion2 = new InventoryItem(ObjectMapper.ReturnItemByID(13), 2);
-            Inventory.Add(_startingWeapon);
-            //Inventory.Add(_startingWeapon2);
-            Inventory.Add(_startingPotion1);
-            //Inventory.Add(_startingPotion2);
-            InventoryItem _adventurerPass = new(ObjectMapper.ReturnItemByID(11), 1);
-            Inventory.Add(_adventurerPass);
             Quests = new List<PlayerQuest>();
-            SetExpToNextLevel();
         }
+
+        public static Player CreateDefaultPlayer()
+        {
+            Player player = new Player(15, 15, 10, 0, 1);
+            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(1), 1));
+            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(10), 3));
+            player.CurrentLocation = ObjectMapper.ReturnLocationByID(1);
+            player._curState = CombatState.NotInCombat;
+            player.SetExpToNextLevel();
+            return player;
+        }
+
+        public static Player CreatePlayerFromXMLString (string _xmlPlayerData)
+        {
+            try
+            {
+                XmlDocument playerData = new();
+                playerData.LoadXml(_xmlPlayerData);
+                int currentHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentHitPoints").InnerText);
+                int maximumHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/MaximumHitPoints").InnerText);
+                int gold = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/Gold").InnerText);
+                int experiencePoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/ExperiencePoints").InnerText);
+                int level = Convert.ToInt32(playerData.SelectSingleNode("Player/Stats/Level").InnerText);
+                int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("Player/Stats/CurrentLocation").InnerText);
+
+                Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints, level);
+                player.CurrentLocation = ObjectMapper.ReturnLocationByID(currentLocationID);
+
+                foreach (XmlNode node in playerData.SelectNodes("/Player/InventoryItems/InventoryItem"))
+                {
+                    int id = Convert.ToInt32(node.Attributes["ID"].Value);
+                    int quantity = Convert.ToInt32(node.Attributes["Quantity"].Value);
+                    player.AddItemToInventory(ObjectMapper.ReturnItemByID(id), quantity);
+                }
+
+                foreach (XmlNode node in playerData.SelectNodes("/Player/PlayerQuests/PlayerQuest"))
+                {
+                    int id = Convert.ToInt32(node.Attributes["ID"].Value);
+                    bool isCompleted = Convert.ToBoolean(node.Attributes["IsCompleted"].Value);
+                    PlayerQuest quest = new PlayerQuest(ObjectMapper.ReturnQuestByID(id));
+                    quest.IsCompleted = isCompleted;
+                    player.Quests.Add(quest);
+                }
+
+                player._curState = (CombatState)Enum.Parse(typeof(CombatState), playerData.SelectSingleNode("Player/PlayerCombatState").InnerText);
+
+                player.SetExpToNextLevel();
+                return player;
+            }
+            catch
+            {
+                return CreateDefaultPlayer();
+            }
+        }
+
         public void MoveTo(Location _newLocation)
         {
             CurrentLocation = _newLocation;
@@ -120,16 +181,14 @@ namespace Engine
 
         public void AddItemToInventory(Item itemToAdd, int quantity)
         {
-            foreach(InventoryItem item in Inventory)
+            InventoryItem item = Inventory.SingleOrDefault(i => i.Details.ID == itemToAdd.ID);
+            if (item == null)
             {
-                if (item.Details.ID == itemToAdd.ID)
-                {
-                    item.Quantity += quantity;
-                    return;
-
-                }
+                Inventory.Add(new InventoryItem(itemToAdd, quantity));
+            } else
+            {
+                item.Quantity += quantity;
             }
-            Inventory.Add(new InventoryItem(itemToAdd, quantity));
         }
 
         private void SetExpToNextLevel()
