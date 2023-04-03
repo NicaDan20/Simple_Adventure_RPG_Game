@@ -36,6 +36,8 @@ namespace Engine
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
         public Location CurrentLocation { get; set; }
+        public Weapon EquippedWeapon { get; set; }
+        public HealingPotion EquippedPotion { get; set; }
         private Player(int _currentHitPoints, int _maxHitPoints, int _gold, int _experiencePoints, int _level) : base(_currentHitPoints, _maxHitPoints)
         {
             Gold = _gold;
@@ -44,14 +46,15 @@ namespace Engine
             Inventory = new List<InventoryItem>();
             Quests = new List<PlayerQuest>();
         }
-
         // Default player factory; this function is loaded when we start a new game
         // we create a new player and move him to the location specified
         public static Player CreateDefaultPlayer()
         {
             Player player = new Player(15, 15, 10, 0, 1);
             player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(1), 1));
+            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(9), 1));
             player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(10), 3));
+            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(13), 3));
             player.CurrentLocation = ObjectMapper.ReturnLocationByID(1);
             player._curState = CombatState.NotInCombat;
             player.SetExpToNextLevel();
@@ -74,6 +77,18 @@ namespace Engine
 
                 Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints, level);
                 player.CurrentLocation = ObjectMapper.ReturnLocationByID(currentLocationID);
+
+                if (playerData.SelectSingleNode("/Player/Stats/EquippedWeapon") != null)
+                {
+                    int equippedWeaponID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/EquippedWeapon").InnerText);
+                    player.EquippedWeapon = (Weapon)ObjectMapper.ReturnItemByID(equippedWeaponID);
+                }
+
+                if (playerData.SelectSingleNode("/Player/Stats/EquippedPotion") != null)
+                {
+                    int equippedPotionID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/EquippedPotion").InnerText);
+                    player.EquippedPotion = (HealingPotion)ObjectMapper.ReturnItemByID(equippedPotionID);
+                }
 
                 foreach (XmlNode node in playerData.SelectNodes("/Player/InventoryItems/InventoryItem"))
                 {

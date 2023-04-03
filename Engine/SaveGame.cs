@@ -20,6 +20,8 @@ namespace Engine
                     <ExperiencePoints> VALUE </ExperiencePoints>
                     <Level> VALUE </Level>
                     <CurrentLocation> Location_ID </CurrentLocation>
+                    <EquippedWeapon> Weapon_ID </EquippedWeapon>
+                    <EquippedPotion> Potion_ID </EquippedPotion>
                 </Stats>
             <InventoryItems>
                 <InventoryItem ID=InventoryItem_ID Quantity=Quantity  />
@@ -69,6 +71,14 @@ namespace Engine
             XmlNode currentLocation = playerData.CreateElement("CurrentLocation");
             currentLocation.AppendChild(playerData.CreateTextNode(_player.CurrentLocation.ID.ToString()));
             stats.AppendChild(currentLocation);
+
+            XmlNode currentWeapon = playerData.CreateElement("EquippedWeapon");
+            currentWeapon.AppendChild(playerData.CreateTextNode(_player.EquippedWeapon.ID.ToString()));
+            stats.AppendChild(currentWeapon);
+
+            XmlNode currentPotion = playerData.CreateElement("EquippedPotion");
+            currentPotion.AppendChild(playerData.CreateTextNode(_player.EquippedPotion.ID.ToString()));
+            stats.AppendChild(currentPotion);
 
             XmlNode inventory = playerData.CreateElement("InventoryItems");
             player.AppendChild(inventory);

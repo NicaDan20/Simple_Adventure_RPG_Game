@@ -253,11 +253,23 @@ namespace Adventure_RPG_Game
             }
             else
             {
+                Weapon activeWeapon;
+                cboWeapons.SelectedIndexChanged -= cboWeapons_SelectedIndexChanged;
                 cboWeapons.DataSource = weapons;
+                cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
                 cboWeapons.DisplayMember = "Name";
                 cboWeapons.ValueMember = "ID";
-                cboWeapons.SelectedIndex = 0;
-                ShowWeaponDamage(weapons[0]);
+                if (_player.EquippedWeapon != null)
+                {
+                    cboWeapons.SelectedItem = _player.EquippedWeapon;
+                    activeWeapon = _player.EquippedWeapon;
+                }
+                else
+                {
+                    cboWeapons.SelectedIndex = 0;
+                    activeWeapon = weapons[0];
+                }
+                ShowWeaponDamage(activeWeapon);
             }
         }
 
@@ -270,6 +282,7 @@ namespace Adventure_RPG_Game
         // when the player changes his weapon, display the damage done
         private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _player.EquippedWeapon = (Weapon)cboWeapons.SelectedItem;
             ShowWeaponDamage(GetActiveWeapon());
         }
 
@@ -301,15 +314,26 @@ namespace Adventure_RPG_Game
                 labelQuantity.Visible = false;
             } else
             {
+                HealingPotion currentPotion;
+                cboPotions.SelectedIndexChanged -= cboPotions_SelectedIndexChanged;
+                cboPotions.DataSource = potions;
+                cboPotions.SelectedIndexChanged += cboPotions_SelectedIndexChanged;
                 cboPotions.Visible = true;
                 btnUsePotion.Visible = true;
                 labelHealFor.Visible = true;
                 labelQuantity.Visible = true;
-                cboPotions.DataSource = potions;
                 cboPotions.DisplayMember = "Name";
                 cboPotions.ValueMember = "ID";
-                cboPotions.SelectedIndex = 0;
-                ShowPotionDetails(potions[0]);
+                if (_player.EquippedPotion != null)
+                {
+                    cboPotions.SelectedItem = _player.EquippedPotion;
+                    currentPotion = _player.EquippedPotion;
+                } else
+                {
+                    currentPotion = potions[0];
+                    cboPotions.SelectedIndex = 0;
+                }
+                ShowPotionDetails(currentPotion);
             }
         }
 
@@ -333,20 +357,20 @@ namespace Adventure_RPG_Game
         // when the player changes his active potion, display the relevant information (quantity, amount healed)
         private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _player.EquippedPotion = (HealingPotion)cboPotions.SelectedItem;
             ShowPotionDetails(GetActivePotion());
         }
 
         // returns the selected potion
         private HealingPotion GetActivePotion()
         {
-            return (HealingPotion)cboPotions.SelectedItem;
+            return _player.EquippedPotion;
         }
         // returns the selected weapon
         private Weapon GetActiveWeapon()
         {
-            return (Weapon)cboWeapons.SelectedItem;
+            return _player.EquippedWeapon;
         }
-
 
         private void CompleteQuest(Quest q)
         {
