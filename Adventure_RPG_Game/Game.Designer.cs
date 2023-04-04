@@ -34,7 +34,7 @@ namespace Adventure_RPG_Game
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label_hit_points = new System.Windows.Forms.Label();
+            this.label_player_hit_points = new System.Windows.Forms.Label();
             this.label_gold = new System.Windows.Forms.Label();
             this.label_experience = new System.Windows.Forms.Label();
             this.label_level = new System.Windows.Forms.Label();
@@ -82,7 +82,7 @@ namespace Adventure_RPG_Game
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.LawnGreen;
-            this.label1.Location = new System.Drawing.Point(19, 15);
+            this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 18);
             this.label1.TabIndex = 0;
@@ -125,15 +125,16 @@ namespace Adventure_RPG_Game
             this.label4.Text = "Gold: ";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
-            // label_hit_points
+            // label_player_hit_points
             // 
-            this.label_hit_points.AutoSize = true;
-            this.label_hit_points.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label_hit_points.ForeColor = System.Drawing.Color.LawnGreen;
-            this.label_hit_points.Location = new System.Drawing.Point(112, 15);
-            this.label_hit_points.Name = "label_hit_points";
-            this.label_hit_points.Size = new System.Drawing.Size(0, 18);
-            this.label_hit_points.TabIndex = 4;
+            this.label_player_hit_points.AutoSize = true;
+            this.label_player_hit_points.Font = new System.Drawing.Font("Maiandra GD", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_player_hit_points.ForeColor = System.Drawing.Color.LawnGreen;
+            this.label_player_hit_points.Location = new System.Drawing.Point(104, 15);
+            this.label_player_hit_points.Name = "label_player_hit_points";
+            this.label_player_hit_points.Size = new System.Drawing.Size(25, 18);
+            this.label_player_hit_points.TabIndex = 4;
+            this.label_player_hit_points.Text = "15";
             // 
             // label_gold
             // 
@@ -305,7 +306,6 @@ namespace Adventure_RPG_Game
             this.gridQuests.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.gridQuests.RowTemplate.Height = 25;
             this.gridQuests.RowTemplate.ReadOnly = true;
-            this.gridQuests.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.gridQuests.Size = new System.Drawing.Size(620, 126);
             this.gridQuests.TabIndex = 19;
             // 
@@ -572,7 +572,7 @@ namespace Adventure_RPG_Game
             this.Controls.Add(this.label_level);
             this.Controls.Add(this.label_experience);
             this.Controls.Add(this.label_gold);
-            this.Controls.Add(this.label_hit_points);
+            this.Controls.Add(this.label_player_hit_points);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -597,7 +597,7 @@ namespace Adventure_RPG_Game
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label_hit_points;
+        private System.Windows.Forms.Label label_player_hit_points;
         private System.Windows.Forms.Label label_gold;
         private System.Windows.Forms.Label label_experience;
         private System.Windows.Forms.Label label_level;

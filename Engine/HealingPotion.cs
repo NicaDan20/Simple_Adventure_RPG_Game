@@ -11,7 +11,23 @@ namespace Engine
 {
     public class HealingPotion : Item
     {
-        public int AmountToHeal { get; set; }
+        private int _amountToHeal;
+        public int AmountToHeal
+        {
+            get { return _amountToHeal; }
+            set
+            {
+                _amountToHeal = value;
+                OnPropertyChanged("AmountToHeal");
+                OnPropertyChanged("AmountHealed");
+            }
+        }
+
+        public string AmountHealed
+        {
+            get { return "Heals for: " + AmountToHeal.ToString(); }
+        }
+
         public override string Type
         {
             get { return "HEALING_POTION"; }

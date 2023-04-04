@@ -27,94 +27,89 @@ namespace Engine
         // Items are loaded from a json file
         public static List<Item> PopulateItems()
         {
-            using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Items.json"))
+            using StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Items.json");
+            try
             {
-                try
-                {
-                    string json = file.ReadToEnd();
-                    var items = JsonConvert.DeserializeObject<List<Item>>(json);
-                    return items;
-                } catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                    return null;
-                }
+                string json = file.ReadToEnd();
+                var items = JsonConvert.DeserializeObject<List<Item>>(json);
+                return items;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+                return null;
             }
         }
         // Monsters are loaded from a json file
         public static List<Monster> PopulateMonsters()
         {
-            using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Monsters.json"))
+            using StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Monsters.json");
+            try
             {
-                try
+                string json = file.ReadToEnd();
+                var monsters = JsonConvert.DeserializeObject<List<Monster>>(json);
+                foreach (Monster m in monsters)
                 {
-                    string json = file.ReadToEnd();
-                    var monsters = JsonConvert.DeserializeObject<List<Monster>>(json);
-                    foreach (Monster m in monsters)
+                    foreach (LootItem it in m.LootTable)
                     {
-                        foreach (LootItem it in m.LootTable)
-                        {
-                            it.Details = ObjectMapper.ReturnItemByID(it.ItemId);
-                        }
-                        Trace.WriteLine(m.LootTable[0].Details.Name);
+                        it.Details = ObjectMapper.ReturnItemByID(it.ItemId);
                     }
-                    return monsters;
-                } catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                    return null;
+                    Trace.WriteLine(m.LootTable[0].Details.Name);
                 }
+                return monsters;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+                return null;
             }
         }
         // Quests are loaded from a json file
        public static List<Quest> PopulateQuests()
         {
-            using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Quests.json"))
+            using StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Quests.json");
+            try
             {
-                try
+                string json = file.ReadToEnd();
+                var quests = JsonConvert.DeserializeObject<List<Quest>>(json);
+                foreach (Quest q in quests)
                 {
-                    string json = file.ReadToEnd();
-                    var quests = JsonConvert.DeserializeObject<List<Quest>>(json);
-                    foreach (Quest q in quests)
+                    foreach (QuestCompletionItem it in q.QuestCompletionItems)
                     {
-                        foreach (QuestCompletionItem it in q.QuestCompletionItems)
-                        {
-                            it.Details = ObjectMapper.ReturnItemByID(it.ItemID);
-                        }
-                        q.RewardItem = ObjectMapper.ReturnItemByID(q.RewardItemID);
-                        Trace.WriteLine(q);
+                        it.Details = ObjectMapper.ReturnItemByID(it.ItemID);
                     }
-                    return quests;
-                } catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                    return null;
+                    q.RewardItem = ObjectMapper.ReturnItemByID(q.RewardItemID);
+                    Trace.WriteLine(q);
                 }
+                return quests;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+                return null;
             }
         }
         // Locations are loaded from a json file
         public static List<Location> PopulateLocations()
         {
-            using (StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Locations.json"))
+            using StreamReader file = File.OpenText(@"C:\Users\danut\source\repos\Simple_Adventure_RPG_Game\data\Locations.json");
+            try
             {
-                try
+                string json = file.ReadToEnd();
+                var locations = JsonConvert.DeserializeObject<List<Location>>(json);
+                foreach (Location l in locations)
                 {
-                    string json = file.ReadToEnd();
-                    var locations = JsonConvert.DeserializeObject<List<Location>>(json);
-                    foreach(Location l in locations)
-                    {
-                        l.ItemRequiredToEnter = ObjectMapper.ReturnItemByID(l.ItemRequiredToEnterID);
-                        l.MonsterLivingHere = ObjectMapper.ReturnMonsterByID(l.MonsterLivingHereID);
-                        l.QuestAvailableHere = ObjectMapper.ReturnQuestByID(l.QuestAvailableHereID);
-                        l.AdjacentLocations = ObjectMapper.MapLocationsToDirectionID(l.AdjacentLocations, locations);
-                    }
-                    return locations;
+                    l.ItemRequiredToEnter = ObjectMapper.ReturnItemByID(l.ItemRequiredToEnterID);
+                    l.MonsterLivingHere = ObjectMapper.ReturnMonsterByID(l.MonsterLivingHereID);
+                    l.QuestAvailableHere = ObjectMapper.ReturnQuestByID(l.QuestAvailableHereID);
+                    l.AdjacentLocations = ObjectMapper.MapLocationsToDirectionID(l.AdjacentLocations, locations);
                 }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                    return null;
-                }
+                return locations;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+                return null;
             }
         }
 

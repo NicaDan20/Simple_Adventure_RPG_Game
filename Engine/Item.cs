@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using JsonSubTypes;
+using System.ComponentModel;
 
 namespace Engine
 {
@@ -12,8 +13,17 @@ namespace Engine
     [JsonSubtypes.KnownSubType(typeof(Weapon), "WEAPON")]
     [JsonSubtypes.KnownSubType(typeof(HealingPotion), "HEALING_POTION")]
     [JsonSubtypes.KnownSubType(typeof(MiscItem), "MISC")]
-    public class Item
+    public class Item : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            }
+        }
         public int ID { get; set; }
         public string Name { get; set; }
         public string NamePlural { get; set; }

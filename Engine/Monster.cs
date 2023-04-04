@@ -10,9 +10,43 @@ namespace Engine
     public class Monster : LivingCreature
     {
         public int ID { get; set; }
-        public string Name { get; set; }
-        public int MaximumDamage { get; set; }
-        public int MinimumDamage { get; set; }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+        private int _maximiumDamage;
+        private int _minimumDamage;
+        public int MaximumDamage
+        {
+            get { return _maximiumDamage; }
+            set
+            {
+                _maximiumDamage = value;
+                OnPropertyChanged("MaximumDamage");
+                OnPropertyChanged("Damage");
+            }
+        }
+        public int MinimumDamage
+        {
+            get { return _minimumDamage; }
+            set
+            {
+                _minimumDamage = value;
+                OnPropertyChanged("MinimumDamage");
+                OnPropertyChanged("Damage");
+            }
+        }
+        public string Damage
+        {
+            get { return MinimumDamage.ToString() + "-" + MaximumDamage.ToString(); }
+        }
         public int RewardExperience { get; set; }
         public int RewardGold { get; set; }
         public List<LootItem> LootTable { get; set; }
@@ -56,7 +90,7 @@ namespace Engine
                 int maximumHitPoints = Convert.ToInt32(node.Attributes["MaximumHitPoints"].Value);
 
                 Monster monster = (ObjectMapper.ReturnMonsterByID(id));
-                Monster _loadedMonster = new Monster(monster.ID, monster.CurrentHitPoints, monster.MaximumHitPoints, monster.Name, monster.RewardExperience, monster.RewardGold, monster.MaximumDamage, monster.MinimumDamage);
+                Monster _loadedMonster = new (monster.ID, monster.CurrentHitPoints, monster.MaximumHitPoints, monster.Name, monster.RewardExperience, monster.RewardGold, monster.MaximumDamage, monster.MinimumDamage);
                 _loadedMonster.CurrentHitPoints = currentHitPoints;
                 _loadedMonster.MaximumHitPoints = maximumHitPoints;
 
@@ -65,6 +99,12 @@ namespace Engine
             {
                 return null;
             }
+        }
+
+        public static Monster CreateDummyMonster()
+        {
+            Monster _dummy = new Monster(0, 0, 0, "Dummy", 0, 0, 0, 0);
+            return _dummy;
         }
 
 

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using System.ComponentModel;
+using System.Data;
 
 namespace Engine
 {
@@ -29,32 +31,86 @@ namespace Engine
     public class Player : LivingCreature
     {
         public CombatState _curState;
-        public int Gold { get; set; }
-        public int ExperiencePoints { get; set; }
+
+        private int _gold;
+        public int Gold
+        {
+            get { return _gold; }
+            set
+            {
+                _gold = value;
+                OnPropertyChanged("Gold");
+            }
+        }
+
+        private int _experiencePoints;
+        public int ExperiencePoints
+        {
+            get { return _experiencePoints; }
+            set
+            {
+                _experiencePoints = value;
+                OnPropertyChanged("ExperiencePoints");
+            }
+        }
+
+        private int _level;
+        public int Level
+        {
+            get { return _level; }
+            set
+            {
+                _level = value;
+                OnPropertyChanged("Level");
+            }
+        }
+
         public int ExpToNextLevel { get; set; }
-        public int Level { get; set; }
-        public List<InventoryItem> Inventory { get; set; }
-        public List<PlayerQuest> Quests { get; set; }
+        public BindingList<InventoryItem> Inventory { get; set; }
+        public BindingList<PlayerQuest> Quests { get; set; }
         public Location CurrentLocation { get; set; }
         public Weapon EquippedWeapon { get; set; }
         public HealingPotion EquippedPotion { get; set; }
+      
+        public List<Weapon> Weapons
+        {
+            get { return Inventory.Where(w => w.Details is Weapon).Select(w => w.Details as Weapon).ToList(); }
+        }
+
+        public List<HealingPotion> Potions
+        {
+            get { return Inventory.Where(p => p.Details is HealingPotion).Select(p => p.Details as HealingPotion).ToList(); }
+        }
+        
+        private void RaiseInventoryChangedEvent (Item item)
+        {
+            if (item is Weapon)
+            {
+                OnPropertyChanged("Weapons");
+            }
+            if (item is HealingPotion)
+            {
+                OnPropertyChanged("Potions");
+            }
+        }
+
         private Player(int _currentHitPoints, int _maxHitPoints, int _gold, int _experiencePoints, int _level) : base(_currentHitPoints, _maxHitPoints)
         {
             Gold = _gold;
             ExperiencePoints = _experiencePoints;
             Level = _level;
-            Inventory = new List<InventoryItem>();
-            Quests = new List<PlayerQuest>();
+            Inventory = new();
+            Quests = new();
         }
         // Default player factory; this function is loaded when we start a new game
         // we create a new player and move him to the location specified
         public static Player CreateDefaultPlayer()
         {
-            Player player = new Player(15, 15, 10, 0, 1);
+            Player player = new (15, 15, 10, 0, 1);
             player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(1), 1));
             player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(9), 1));
+            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(13), 5));
             player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(10), 3));
-            player.Inventory.Add(new InventoryItem(ObjectMapper.ReturnItemByID(13), 3));
             player.CurrentLocation = ObjectMapper.ReturnLocationByID(1);
             player._curState = CombatState.NotInCombat;
             player.SetExpToNextLevel();
@@ -75,7 +131,7 @@ namespace Engine
                 int level = Convert.ToInt32(playerData.SelectSingleNode("Player/Stats/Level").InnerText);
                 int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("Player/Stats/CurrentLocation").InnerText);
 
-                Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints, level);
+                Player player = new (currentHitPoints, maximumHitPoints, gold, experiencePoints, level);
                 player.CurrentLocation = ObjectMapper.ReturnLocationByID(currentLocationID);
 
                 if (playerData.SelectSingleNode("/Player/Stats/EquippedWeapon") != null)
@@ -101,7 +157,7 @@ namespace Engine
                 {
                     int id = Convert.ToInt32(node.Attributes["ID"].Value);
                     bool isCompleted = Convert.ToBoolean(node.Attributes["IsCompleted"].Value);
-                    PlayerQuest quest = new PlayerQuest(ObjectMapper.ReturnQuestByID(id));
+                    PlayerQuest quest = new (ObjectMapper.ReturnQuestByID(id));
                     quest.IsCompleted = isCompleted;
                     player.Quests.Add(quest);
                 }
@@ -130,7 +186,7 @@ namespace Engine
             {
                 return true;
             }
-            return Inventory.Exists(item => item.Details.ID == _newLocation.ItemRequiredToEnterID);
+            return Inventory.Any(item => item.Details.ID == _newLocation.ItemRequiredToEnterID);
         }
 
         // Checks whether there is a quest in the area
@@ -146,7 +202,7 @@ namespace Engine
         // Checks whether there is a quest in the quest log
         public bool CheckIfThereIsQuestInLog(Quest q)
         {
-            return Quests.Exists(pq => pq.Details.ID == q.ID);
+            return Quests.Any(pq => pq.Details.ID == q.ID);
         }
         // Pick up quest function
         public void PickUpQuest(Quest q)
@@ -171,21 +227,35 @@ namespace Engine
             {
                 if (item.Details == potion)
                 {
-                    // We decrease the item quantity
-                    item.Quantity--;
                     // We heal the player
                     HealPlayer(potion.AmountToHeal);
-                    RemoveFromInventory(item);
+                    // We remove the potion from the inventory
+                    RemoveFromInventory(potion);
                 }
             }
         }
 
-        // We check if the item quantity is 0, if so we remove the item
-        private void RemoveFromInventory(InventoryItem item)
+        // Removing item from inventory
+        private void RemoveFromInventory(Item itemToRemove, int quantity = 1)
         {
-            if (item.Quantity == 0)
+            // We check if the item exists
+            InventoryItem item = Inventory.SingleOrDefault(item => item.Details.ID == itemToRemove.ID);
+            if (item != null)
             {
-                Inventory.Remove(item);
+                // if it does, we decrease its quantity; by default the quantity is one
+                item.Quantity -= quantity;
+                if (item.Quantity < 0)
+                {
+                    item.Quantity = 0;
+                }
+                // if quantity of the item is 0, we remove it from the inventory
+                if (item.Quantity == 0)
+                {
+                    // we remove the item
+                    Inventory.Remove(item);
+                }
+                // we notify the UI that the inventory changed
+                RaiseInventoryChangedEvent(itemToRemove);
             }
         }
 
@@ -230,6 +300,8 @@ namespace Engine
                 // parameter
                 item.Quantity += quantity;
             }
+            // We notify the UI that the inventory changed
+            RaiseInventoryChangedEvent(itemToAdd);
         }
 
         // Function which is called whenever the player levels up, this determines the amount of experience a player needs
@@ -281,15 +353,11 @@ namespace Engine
         {                        
             foreach (QuestCompletionItem qci in q.QuestCompletionItems)
             {
-
-                foreach (InventoryItem item in Inventory)
+                // Subtract the quantity from the player's inventory that was needed to finish the quest
+                InventoryItem item = Inventory.SingleOrDefault(item => item.Details.ID == qci.Details.ID);
+                if (item != null)
                 {
-                    if (item.Details.ID == qci.Details.ID)
-                    {
-                        item.Quantity -= qci.Quantity;
-                        RemoveFromInventory(item);
-                        break;
-                    }
+                    RemoveFromInventory(item.Details, qci.Quantity);
                 }
             }
         }
@@ -297,7 +365,7 @@ namespace Engine
         //Check if the player has already completed the quest
         public bool CheckIfQuestIsCompleted(Quest q)
         {
-            return Quests.Exists(pq => pq.Details.ID == q.ID && pq.IsCompleted == true);
+            return Quests.Any(pq => pq.Details.ID == q.ID && pq.IsCompleted == true);
         }
 
         // Complete quest function
@@ -315,12 +383,13 @@ namespace Engine
                     GainExperience(q.RewardExperience);
                     RemoveQuestCompletionItems(q);
                     // And mark the quest as complete
-                    Quests = Quests.Where(pq => q.ID == pq.Details.ID).Select(pq =>
+                    List<PlayerQuest> quests = Quests.Where(pq => q.ID == pq.Details.ID).Select(pq =>
                     {
                         pq.IsCompleted = true;
                         return pq;
 
                     }).ToList();
+                    Quests = new (quests);
                     // And return a boolean value which the UI will deal with later 
                     return true;
                 }

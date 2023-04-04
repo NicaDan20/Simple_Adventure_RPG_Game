@@ -3,13 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Engine
 {
-    public class LivingCreature
+    public class LivingCreature : INotifyPropertyChanged
     {
-        public int CurrentHitPoints { get; set; }
-        public int MaximumHitPoints { get; set; }
+        private int _currentHitPoints;
+        public int CurrentHitPoints
+        {
+            get { return _currentHitPoints; }
+            set { 
+                _currentHitPoints = value;
+                OnPropertyChanged("CurrentHitPoints");
+                OnPropertyChanged("HitPoints");
+            }
+        }
+        private int _maximumHitPoints;
+        public int MaximumHitPoints
+        {
+            get { return _maximumHitPoints; }
+            set
+            {
+                _maximumHitPoints = value;
+                OnPropertyChanged("MaximumHitPoints");
+                OnPropertyChanged("HitPoints");
+            }
+        }
+
+        public string HitPoints
+        {
+            get { return CurrentHitPoints.ToString() + "/" + MaximumHitPoints.ToString(); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged (string name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public LivingCreature(int _currentHitPoints, int _maxHitPoints)
         {
@@ -32,5 +67,7 @@ namespace Engine
             }
             return true;
         }
+
+
     }
 }

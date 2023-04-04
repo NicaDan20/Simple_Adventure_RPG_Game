@@ -26,12 +26,13 @@ namespace Adventure_RPG_Game
             _backgroundWorker1 = new();
             _backgroundWorker1.DoWork += new DoWorkEventHandler(BackgroundWorker1_DoWork);
             _backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BackgroundWorker1_RunWorkerCompleted);
+
         }
 
         private void InitializeGame()
         {
             InitializeComponent();
-            _player = Player.CreateDefaultPlayer(); 
+            _player = Player.CreateDefaultPlayer();
             InitializeUI();
         }
 
@@ -40,16 +41,18 @@ namespace Adventure_RPG_Game
         private void InitializeUI()
         {
             UpdatePlayerStats();
+            LoadQuestDataGrid();
+            LoadInventory();
             UpdateLocationTxtBox();
             CheckIfThereIsLocation();
             NameGoToBtns();
             CheckForQuests();
-            RefreshQuestDataGrid();
-            ShowWeaponsDropDown(RefreshWeaponComboBox());
-            ShowPotionsDropDown(RefreshPotionComboBox());
-            LoadInventory();
+            ShowWeaponsDropDown();
+            ShowPotionsDropDown();
+            _player.PropertyChanged += PlayerOnPropertyChanged;
             LoadMonsterPanel();
             LoadCombatButtons();
+            ShowPotionDetails();
             UpdateGameOverUI();
         }
 
@@ -205,72 +208,66 @@ namespace Adventure_RPG_Game
             // We update the UI to hide the Pick Up button and show the Turn In button. We also refresh the Quest Log (represented by)
             // a data grid to show the recently accepted quest
             CheckForQuests();
-            RefreshQuestDataGrid();
         }
 
         // We create the data grid which contains information about the quests that the player accepted.
-        private void RefreshQuestDataGrid()
+        private void LoadQuestDataGrid()
         {
             gridQuests.RowHeadersVisible = false;
-            gridQuests.ColumnCount = 3;
-            gridQuests.Columns[0].Name = "Quest";
-            gridQuests.Columns[0].Width = 210;
-            gridQuests.Columns[1].Name = "Description";
-            gridQuests.Columns[1].Width = 327;
-            gridQuests.Columns[2].Name = "Completed?";
-            gridQuests.Rows.Clear();
-
-            foreach (PlayerQuest pq in _player.Quests)
+            gridQuests.AutoGenerateColumns = false;
+            gridQuests.DataSource = _player.Quests;
+            gridQuests.Columns.Add(new DataGridViewTextBoxColumn
             {
-                gridQuests.Rows.Add(new[] { pq.Details.Name, pq.Details.Description, pq.IsCompleted.ToString() });
-            }
+                HeaderText = "Name",
+                Width = 195,
+                DataPropertyName = "Name"
+            });
+            gridQuests.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Description",
+                Width = 375,
+                DataPropertyName = "Description"
+            });
+            gridQuests.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Done?",
+                Width = 50,
+                DataPropertyName = "IsCompleted"
+            });
+            
         }
 
-        // refreshes the drop down box where the player can select their preferred weapon to attack with
-        private List<Weapon> RefreshWeaponComboBox()
+        // Load inventory function
+        private void LoadInventory()
         {
-            List<Weapon> weapons = new();
-            foreach (InventoryItem item in _player.Inventory)
+            gridInventory.RowHeadersVisible = false;
+            gridInventory.AutoGenerateColumns = false;
+            gridInventory.DataSource = _player.Inventory;
+            gridInventory.Columns.Add(new DataGridViewTextBoxColumn
             {
-                if (item.Details is Weapon weapon)
-                {
-                    if (item.Quantity > 0)
-                    {
-                        weapons.Add(weapon);
-                    }
-                }
-            }
-            return weapons;
+                HeaderText = "Name",
+                Width = 525,
+                DataPropertyName = "Description"
+            });
+            gridInventory.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Quantity",
+                DataPropertyName = "Quantity"
+            });
+
         }
 
         // enable / disable the drop down if the player is / is not in combat
-        private void ShowWeaponsDropDown(List<Weapon> weapons)
+        private void ShowWeaponsDropDown()
         {
-            if (weapons.Count == 0)
+            cboWeapons.DataSource = _player.Weapons;
+            cboWeapons.DisplayMember = "Name";
+            cboWeapons.ValueMember = "Id";
+            if (_player.EquippedWeapon != null)
             {
-                cboWeapons.Visible = false;
-                btnUseWeapon.Visible = false;
+                cboWeapons.SelectedItem = _player.EquippedWeapon;
             }
-            else
-            {
-                Weapon activeWeapon;
-                cboWeapons.SelectedIndexChanged -= cboWeapons_SelectedIndexChanged;
-                cboWeapons.DataSource = weapons;
-                cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
-                cboWeapons.DisplayMember = "Name";
-                cboWeapons.ValueMember = "ID";
-                if (_player.EquippedWeapon != null)
-                {
-                    cboWeapons.SelectedItem = _player.EquippedWeapon;
-                    activeWeapon = _player.EquippedWeapon;
-                }
-                else
-                {
-                    cboWeapons.SelectedIndex = 0;
-                    activeWeapon = weapons[0];
-                }
-                ShowWeaponDamage(activeWeapon);
-            }
+            cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
         }
 
         // print out the damage done by the currently equipped weapon
@@ -287,78 +284,71 @@ namespace Adventure_RPG_Game
         }
 
         // same thing, but for potions
-        private List<HealingPotion> RefreshPotionComboBox()
+        private void ShowPotionsDropDown()
         {
-            List<HealingPotion> healingPotions = new();
-            foreach (InventoryItem item in _player.Inventory)
+            cboPotions.DataSource = _player.Potions;
+            cboPotions.DisplayMember = "Name";
+            cboPotions.ValueMember = "Id";
+            if (_player.EquippedPotion != null)
             {
-                if (item.Details is HealingPotion potion)
+                cboPotions.SelectedItem = _player.EquippedPotion;
+            }
+            cboPotions.SelectedIndexChanged += cboPotions_SelectedIndexChanged;
+        }
+        
+        private void PlayerOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "Weapons")
+            {
+                Weapon equippedWeapon = _player.EquippedWeapon;
+                cboWeapons.DataSource = _player.Weapons;
+                if (equippedWeapon != null && _player.Weapons.Exists(w => w.ID == equippedWeapon.ID))
                 {
-                    if (item.Quantity > 0)
-                    {
-                        healingPotions.Add(potion);
-                    }
+                    cboWeapons.SelectedItem = equippedWeapon;
+                }
+                if (!_player.Weapons.Any())
+                {
+                    cboWeapons.Visible = false;
+                    btnUseWeapon.Visible = false;
                 }
             }
-            return healingPotions;
-        }
-
-        // same thing, but for potions
-        private void ShowPotionsDropDown(List<HealingPotion> potions)
-        {
-            if (potions.Count == 0)
+            if (args.PropertyName == "Potions")
             {
-                cboPotions.Visible = false;
-                btnUsePotion.Visible = false;
-                labelHealFor.Visible = false;
-                labelQuantity.Visible = false;
-            } else
-            {
-                HealingPotion currentPotion;
-                cboPotions.SelectedIndexChanged -= cboPotions_SelectedIndexChanged;
-                cboPotions.DataSource = potions;
-                cboPotions.SelectedIndexChanged += cboPotions_SelectedIndexChanged;
-                cboPotions.Visible = true;
-                btnUsePotion.Visible = true;
-                labelHealFor.Visible = true;
-                labelQuantity.Visible = true;
-                cboPotions.DisplayMember = "Name";
-                cboPotions.ValueMember = "ID";
-                if (_player.EquippedPotion != null)
+                HealingPotion equippedPotion = _player.EquippedPotion;
+                cboPotions.DataSource = _player.Potions;
+                if (equippedPotion != null && _player.Potions.Exists(p => p.ID == equippedPotion.ID))
                 {
-                    cboPotions.SelectedItem = _player.EquippedPotion;
-                    currentPotion = _player.EquippedPotion;
-                } else
-                {
-                    currentPotion = potions[0];
-                    cboPotions.SelectedIndex = 0;
+                    cboPotions.SelectedItem = equippedPotion;
                 }
-                ShowPotionDetails(currentPotion);
+                if (!_player.Potions.Any())
+                {
+                    cboPotions.Visible = false;
+                    btnUsePotion.Visible = false;
+                }
             }
         }
 
         // display the amount healed by a potion
-        private void ShowHPHealed(HealingPotion selectedPotion)
+        private void ShowHPHealed()
         {
-            labelHealFor.Text = "Heal Amount: " + selectedPotion.AmountToHeal;
+            labelHealFor.DataBindings.Add("Text", cboPotions.SelectedItem, "AmountHealed");
         }
 
         // display how many potions of that type the player currently has
-        private void ShowPotionQuantity (HealingPotion selectedPotion)
-        {  
-            labelQuantity.Text = "Potions left: " + _player.ReturnQuantity(selectedPotion).ToString();
+        private void ShowPotionQuantity ()
+        {
+            //labelQuantity.DataBindings.Add("Text", _player.Potions, "Quantity");
         }
 
-        private void ShowPotionDetails(HealingPotion selectedPotion)
+        private void ShowPotionDetails()
         {
-            ShowHPHealed(selectedPotion);
-            ShowPotionQuantity(selectedPotion);
+            ShowHPHealed();
+            ShowPotionQuantity();
         }
         // when the player changes his active potion, display the relevant information (quantity, amount healed)
         private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
         {
             _player.EquippedPotion = (HealingPotion)cboPotions.SelectedItem;
-            ShowPotionDetails(GetActivePotion());
         }
 
         // returns the selected potion
@@ -380,9 +370,6 @@ namespace Adventure_RPG_Game
                 // if yes, display a message to notify the player of the quest completion
                 txtBoxMessages.Text += Environment.NewLine + "You have completed the following quest: " + q.Name + "." + Environment.NewLine + "You receive " + q.RewardExperience + " Experience " + q.RewardGold + " Gold " + " and the following item: " + q.RewardItem.Name + "."  + Environment.NewLine;
                 // refresh the relevant parts of the UI
-                LoadInventory();
-                UpdatePlayerStats();
-                RefreshQuestDataGrid();
                 CheckForQuests();
                 ScrollToBottomOfMessages();
             }
@@ -399,13 +386,13 @@ namespace Adventure_RPG_Game
             PlayerHeal(GetActivePotion());
         }
 
-        // updates the important player stats (Level, Experience Points, Gold and HP values)
+        // Adds databinding for the various stats of the player character (Level, Experience Points, Gold and HP values)
         private void UpdatePlayerStats()
         {
-            label_experience.Text = _player.ExperiencePoints.ToString();
-            label_gold.Text = _player.Gold.ToString();
-            label_hit_points.Text = _player.CurrentHitPoints.ToString() + "/" + _player.MaximumHitPoints.ToString();
-            label_level.Text = _player.Level.ToString();
+            label_experience.DataBindings.Add("Text", _player, "ExperiencePoints");
+            label_gold.DataBindings.Add("Text", _player, "Gold");
+            label_player_hit_points.DataBindings.Add("Text", _player, "HitPoints");
+            label_level.DataBindings.Add("Text", _player, "Level");
         }
 
         // The function responsible with the core movement of the game
@@ -435,6 +422,7 @@ namespace Adventure_RPG_Game
                     // the weapon and potion combo boxes
                     LoadCombatButtons();
                     LoadMonsterPanel();
+                    LoadMonsterDetails();
 
                     // we set the player state to Combat, by default the player has the first turn
                     _player._curState = CombatState.PlayerTurn;
@@ -453,27 +441,6 @@ namespace Adventure_RPG_Game
             }
         }
 
-        // Load inventory function
-        private void LoadInventory()
-        {
-            gridInventory.RowHeadersVisible = false;
-            gridInventory.ColumnCount = 2;
-            gridInventory.Columns[0].Name = "Item";
-            gridInventory.Columns[0].Width = 450;
-            gridInventory.Columns[1].Name = "Quantity";
-            gridInventory.Columns[1].Width = 200;
-            gridInventory.Rows.Clear();
-
-            foreach (InventoryItem item in _player.Inventory)
-            {
-                if (item.Details is MiscItem)
-                {
-                    gridInventory.Rows.Add(new[] { item.Details.Name, item.Quantity.ToString() });
-                }
-            }
-
-        }
-
         // Spawn monster function
         private void SpawnMonster()
         {
@@ -489,7 +456,7 @@ namespace Adventure_RPG_Game
                 _currentMonster = new(_monsterLivingHere.ID, _monsterLivingHere.CurrentHitPoints, _monsterLivingHere.MaximumHitPoints, _monsterLivingHere.Name,
                    _monsterLivingHere.RewardExperience, _monsterLivingHere.RewardGold, _monsterLivingHere.MaximumDamage, _monsterLivingHere.MinimumDamage);
                 ScrollToBottomOfMessages();
-
+                
                 // add its appropriate loot table
                 foreach (LootItem item in _monsterLivingHere.LootTable)
                 {
@@ -509,21 +476,27 @@ namespace Adventure_RPG_Game
         {
             if (_currentMonster != null)
             {
-                panel_Monster.Visible = true;
-                UpdateMonsterDetails();   
+               panel_Monster.Visible = true;
             } else
             {
-                panel_Monster.Visible = false;
+               panel_Monster.Visible = false;
             }
         }
 
-        // Whenever a monster takes damage, we update its HP values
-        private void UpdateMonsterDetails()
+        private void LoadMonsterDetails()
         {
-            label_Monster_Name.Text = _currentMonster.Name.ToString();
-            label_Monster_HitPoints_Value.Text = _currentMonster.CurrentHitPoints + "/" + _currentMonster.MaximumHitPoints;
-            label_Monster_Damage_Values.Text = _currentMonster.MinimumDamage + "-" + _currentMonster.MaximumDamage;
+            label_Monster_Name.DataBindings.Add("Text", _currentMonster, "Name");
+            label_Monster_Damage_Values.DataBindings.Add("Text", _currentMonster, "Damage");
+            label_Monster_HitPoints_Value.DataBindings.Add("Text", _currentMonster, "HitPoints");
         }
+
+        private void UnLoadMonsterDetails()
+        {
+            label_Monster_Name.DataBindings.Clear();
+            label_Monster_Damage_Values.DataBindings.Clear();
+            label_Monster_HitPoints_Value.DataBindings.Clear();
+        }
+
         // Wait function for the BackgroundWorker
         private void wait(int milliseconds)
         {
@@ -566,7 +539,6 @@ namespace Adventure_RPG_Game
                         // We display the amount of damage the monster did to the player and update the relevant parts of the UI
                         int _damageDealt = _currentMonster.Attack(_player);
                         ShowDamageText(_currentMonster, _player, _damageDealt);
-                        UpdatePlayerStats();
 
                         //After the player has done its attack, we either have two possibilities
                         if (_player.IsAlive())
@@ -607,7 +579,8 @@ namespace Adventure_RPG_Game
                         _currentMonster = null;
                         LoadMonsterPanel();
                         LoadCombatButtons();
-
+                        UnLoadMonsterDetails();
+                        _player._curState = CombatState.NotInCombat;
                         // We check whether or not the player has enough experience to level up
                         LevelUp();
                         break;
@@ -632,7 +605,6 @@ namespace Adventure_RPG_Game
                 // If we do, we send a message and update the relevant parts of the UI
                 txtBoxMessages.Text += "You have levelled up! You gain 8 HP!" + Environment.NewLine;
                 ScrollToBottomOfMessages();
-                UpdatePlayerStats(); // HP, Experience, Level
             }
         }
 
@@ -673,7 +645,6 @@ namespace Adventure_RPG_Game
             ShowDamageText(_player, _currentMonster, _damageDealt);
             
             // we update monster UI
-            UpdateMonsterDetails();
 
             // Depending on the monster state, we have two options
             if (_currentMonster.IsAlive())
@@ -695,9 +666,7 @@ namespace Adventure_RPG_Game
             
             int _amountHealed = _activePotion.AmountToHeal;
             _player.UsePotion(_activePotion);
-            UpdatePlayerStats();
             ShowAmountHealedMessage(_amountHealed);
-            ShowPotionsDropDown(RefreshPotionComboBox());
             if (_currentMonster.IsAlive())
             {
                 _player._curState = CombatState.EnemyTurn;
@@ -752,7 +721,6 @@ namespace Adventure_RPG_Game
             txtBoxMessages.Text += "You receive " + _currentMonster.RewardGold.ToString() + " Gold, " + _currentMonster.RewardExperience.ToString() + " Experience" + Environment.NewLine;
             _player.Gold += _currentMonster.RewardGold;
             _player.ExperiencePoints += _currentMonster.RewardExperience;
-            UpdatePlayerStats();
             ScrollToBottomOfMessages();
         }
 
@@ -798,7 +766,6 @@ namespace Adventure_RPG_Game
                     txtBoxMessages.Text += Environment.NewLine;
                     ScrollToBottomOfMessages();
             }
-            LoadInventory();
         }
         
         // If the player wants to try again, we will call a BackgroundWorker to asynchronously re-open the game;
@@ -814,7 +781,7 @@ namespace Adventure_RPG_Game
 
         private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Game Game2 = new Game();
+            Game Game2 = new ();
             Game2.Show();
             this.Dispose(false);
         }
@@ -853,7 +820,7 @@ namespace Adventure_RPG_Game
                 // if the player's loaded state indicates that the player might be in combat
                 // we load the monster he was fighting with, and initialize the ui
                 _currentMonster = Monster.GetMonsterFromXML(File.ReadAllText(PLAYER_DATA_FILE_NAME));
-                InitializeUI();
+                //InitializeUI();
                 // and resume the combat sequence function
                 DoCombatSequence();
             }
@@ -861,7 +828,7 @@ namespace Adventure_RPG_Game
             {
                 // if the player's current state is Not in Combat, it means the player is not in combat... and we Initialize the UI as
                 // normal
-                InitializeUI();
+                //InitializeUI();
             }
         }
     }

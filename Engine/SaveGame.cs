@@ -42,7 +42,7 @@ namespace Engine
         */
         public static string ToXMLString(Player _player, Monster _monster = null)
         {
-            XmlDocument playerData = new XmlDocument();
+            XmlDocument playerData = new ();
             XmlNode player = playerData.CreateElement("Player");
             playerData.AppendChild(player);
             XmlNode stats = playerData.CreateElement("Stats");
@@ -82,7 +82,7 @@ namespace Engine
 
             XmlNode inventory = playerData.CreateElement("InventoryItems");
             player.AppendChild(inventory);
-            _player.Inventory.ForEach(item =>
+            foreach (InventoryItem item in _player.Inventory)
             {
                 XmlNode inventoryItem = playerData.CreateElement("InventoryItem");
                 XmlAttribute idAttribute = playerData.CreateAttribute("ID");
@@ -92,21 +92,22 @@ namespace Engine
                 quantityAttribute.Value = item.Quantity.ToString();
                 inventoryItem.Attributes.Append(quantityAttribute);
                 inventory.AppendChild(inventoryItem);
-            });
+
+            }
 
             XmlNode playerQuests = playerData.CreateElement("PlayerQuests");
             player.AppendChild(playerQuests);
-            _player.Quests.ForEach(q =>
+            foreach (PlayerQuest quest in _player.Quests)
             {
                 XmlNode playerQuest = playerData.CreateElement("PlayerQuest");
                 XmlAttribute idAttribute = playerData.CreateAttribute("ID");
-                idAttribute.Value = q.Details.ID.ToString();
+                idAttribute.Value = quest.Details.ID.ToString();
                 playerQuest.AppendChild(idAttribute);
                 XmlAttribute isCompletedAttribute = playerData.CreateAttribute("IsCompleted");
-                isCompletedAttribute.Value = q.IsCompleted.ToString();
+                isCompletedAttribute.Value = quest.IsCompleted.ToString();
                 playerQuest.Attributes.Append(isCompletedAttribute);
                 playerQuests.AppendChild(playerQuest);
-            });
+            }
 
             XmlNode playerCombatState = playerData.CreateElement("PlayerCombatState");
             playerCombatState.AppendChild(playerData.CreateTextNode(_player._curState.ToString()));

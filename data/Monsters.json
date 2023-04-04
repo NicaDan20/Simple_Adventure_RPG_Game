@@ -18,7 +18,13 @@
         "ItemId": 3,
         "DropChance": 75,
         "IsDefaultItem": true
+      },
+      {
+        "ItemId": 8,
+        "DropChance": 100,
+        "IsDefaultItem": false
       }
+
     ]
   },
   {
